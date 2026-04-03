@@ -1,6 +1,6 @@
 # The Architect's Blueprint
 
-**Systems thinking, AI internals, and production infrastructure — explained simply, grounded in real code.**
+**Systems thinking, AI internals, and production infrastructure. Explained simply, grounded in real code.**
 
 ---
 
@@ -8,7 +8,7 @@
 
 A 36-chapter book for anyone who wants to understand how software systems actually work. Not theory. Not toy examples. Real concepts, real code, real explanations.
 
-If you have ever used an app and wondered what is happening behind the screen — this book is for you.
+If you have ever used an app and wondered what is happening behind the screen, this book is for you.
 
 ---
 
