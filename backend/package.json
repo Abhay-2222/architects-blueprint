@@ -1,0 +1,18 @@
+{
+  "name": "architects-blueprint-server",
+  "version": "1.0.0",
+  "description": "Backend server for The Architect's Blueprint book",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3"
+  }
+}
