@@ -1,5 +1,22 @@
+# Compiled outputs
 *.epub
+
+# Raw manuscript — stays local, never published
+ch*.md
+appendix*.md
+build_epub.py
+gitbook/
+.gitbook.yaml
+
+# Build source files — local only, book.html is the compiled output
+html/ch*.html
+html/appendices.html
+html/build_book.py
+
+# Python
 __pycache__/
 *.pyc
+
+# OS
 .DS_Store
 Thumbs.db
