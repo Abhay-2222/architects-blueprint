@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Architect's Blueprint — Chapters 16–20</title>
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --border: #e2e8f0;
+    --muted: #64748b;
+    --lab-bg: #f0fdf4;
+    --lab-border: #16a34a;
+    --rw-bg: #fefce8;
+    --rw-border: #ca8a04;
+    --research-bg: #f5f3ff;
+    --research-border: #7c3aed;
+    --code-bg: #1e293b;
+    --code-fg: #e2e8f0;
+    --max-w: 820px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Georgia', serif;
+    font-size: 17px;
+    line-height: 1.75;
+    color: var(--ink);
+    background: #fff;
+  }
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--ink);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    display: flex;
+    gap: 0.25rem 1rem;
+    flex-wrap: wrap;
+    font-family: sans-serif;
+    font-size: 13px;
+  }
+  nav a { color: #93c5fd; text-decoration: none; }
+  nav a:hover { text-decoration: underline; }
+  nav .sep { color: #475569; }
+  /* LAYOUT */
+  .chapter {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 3rem 1.5rem 4rem;
+    border-bottom: 2px solid var(--border);
+  }
+  /* LABELS */
+  .part-label {
+    font-family: sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .chapter-title {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+  }
+  .chapter-intro {
+    color: var(--muted);
+    font-family: sans-serif;
+    font-size: 15px;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  /* HEADINGS */
+  h2 {
+    font-size: 1.35rem;
+    margin: 2.5rem 0 0.75rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+  h3 { font-size: 1.1rem; margin: 1.75rem 0 0.5rem; }
+  p { margin-bottom: 1rem; }
+  ul, ol { margin: 0.5rem 0 1rem 1.5rem; }
+  li { margin-bottom: 0.25rem; }
+  strong { font-weight: 700; }
+  /* TABLE */
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-family: sans-serif; font-size: 15px; }
+  th, td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+  th { background: var(--accent-light); font-weight: 700; }
+  /* CODE */
+  pre {
+    background: var(--code-bg);
+    color: var(--code-fg);
+    padding: 1.25rem 1.5rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 13.5px;
+    line-height: 1.55;
+    margin: 1rem 0 1.5rem;
+  }
+  code { font-family: 'Menlo', 'Consolas', monospace; }
+  p code, li code, td code {
+    background: var(--accent-light);
+    border: 1px solid #bfdbfe;
+    border-radius: 3px;
+    padding: 0.1em 0.35em;
+    font-size: 0.88em;
+  }
+  /* BOXES */
+  .analogy {
+    background: var(--accent-light);
+    border-left: 4px solid var(--accent);
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+  }
+  .lab {
+    background: var(--lab-bg);
+    border: 2px solid var(--lab-border);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin: 2.5rem 0;
+  }
+  .lab-title {
+    font-family: sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--lab-border);
+    margin-bottom: 0.5rem;
+  }
+  .real-world {
+    background: var(--rw-bg);
+    border-left: 4px solid var(--rw-border);
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    margin: 2rem 0;
+    font-size: 15.5px;
+  }
+  .real-world strong { color: var(--rw-border); }
+  .research {
+    background: var(--research-bg);
+    border-left: 4px solid var(--research-border);
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    margin: 2rem 0;
+    font-size: 15.5px;
+  }
+  .research strong { color: var(--research-border); }
+  .takeaway {
+    background: var(--ink);
+    color: #e2e8f0;
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin: 2.5rem 0 1rem;
+  }
+  .takeaway strong { color: #93c5fd; }
+  /* CHAPTER NAV */
+  .chapter-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-family: sans-serif;
+    font-size: 14px;
+  }
+  .chapter-nav a { color: var(--accent); text-decoration: none; }
+  .chapter-nav a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="ch01-05.html">Ch 1–5</a><span class="sep">|</span>
+  <a href="ch06-10.html">Ch 6–10</a><span class="sep">|</span>
+  <a href="ch11-15.html">Ch 11–15</a><span class="sep">|</span>
+  <strong style="color:#fff">Ch 16–20</strong><span class="sep">|</span>
+  <a href="ch21-25.html">Ch 21–25</a><span class="sep">|</span>
+  <a href="ch26-30.html">Ch 26–30</a><span class="sep">|</span>
+  <a href="ch31-36.html">Ch 31–36</a>
+  <span class="sep" style="margin-left:auto"></span>
+  <a href="#ch16">16</a>
+  <a href="#ch17">17</a>
+  <a href="#ch18">18</a>
+  <a href="#ch19">19</a>
+  <a href="#ch20">20</a>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════
+     CHAPTER 16 — MCP Client: The Agent Calls the Registry
+     ═══════════════════════════════════════════════════════ -->
+<section class="chapter" id="ch16">
+  <div class="part-label">Part 3: The AI Agent — How an AI Coding Assistant Actually Works</div>
+  <h1 class="chapter-title">Chapter 16: MCP Client — The Agent Calls the Registry</h1>
+  <p class="chapter-intro">The AI agent needs tools it wasn't born with. The MCP client is how it connects to them at runtime.</p>
+
+  <h2>The Analogy</h2>
+  <div class="analogy">
+    <p>You are a skilled contractor — a builder who can do many things. You have your own toolkit: a hammer, a saw, a level. But sometimes a job requires a specialized tool you don't carry. A laser distance measurer. An industrial tile cutter. A concrete drill.</p>
+    <p>You could buy every tool yourself. Or you could rent from the tool library in town.</p>
+    <p>The tool library has a catalog. You look up what you need, rent it, bring it to the job site, use it, and return it when you're done. The catalog keeps growing as new tools are added by other contractors.</p>
+    <p><strong>The Tool Registry is the tool library. The AI agent is the contractor. The MCP client is the contractor's way of talking to the library — calling ahead, ordering the tool, and picking it up.</strong></p>
+  </div>
+
+  <h2>The Concept</h2>
+  <p>The <strong>MCP client</strong> is the part of the agent runtime that:</p>
+  <ol>
+    <li><strong>Connects</strong> to MCP servers (the tools registered in the Registry)</li>
+    <li><strong>Discovers</strong> what tools those servers provide</li>
+    <li><strong>Calls</strong> those tools when the agent needs them</li>
+    <li><strong>Returns</strong> results back to the agent loop</li>
+  </ol>
+  <p>The key insight: MCP servers are separate programs. They are not built into the agent. They run independently — maybe on your computer, maybe in the cloud, maybe on a Raspberry Pi in your living room. The MCP client is the bridge.</p>
+
+  <h2>System Diagram</h2>
+<pre><code>MCP CLIENT CONNECTING MULTIPLE SERVERS
+
+┌─────────────────────────────────────────────────┐
+│  AI AGENT (the AI assistant)                    │
+│                                                 │
+│  Built-in tools:                                │
+│    read_file, write_file, bash, glob_search     │
+│                                                 │
+│  MCP Client                                     │
+│  ┌───────────────────────────────────────────┐  │
+│  │ calendar_mcp → stdio → node calendar.js  │  │
+│  │   Tools: calendar_mcp__get_events        │  │
+│  │           calendar_mcp__create_event     │  │
+│  │                                          │  │
+│  │ weather_mcp → http → 192.168.1.50:4000  │  │
+│  │   Tools: weather_mcp__get_forecast       │  │
+│  │           weather_mcp__get_current       │  │
+│  │                                          │  │
+│  │ registry  → sse → toolregistry.example.com/sse │
+│  │   Tools: registry__search_servers       │  │
+│  └───────────────────────────────────────────┘  │
+│                                                 │
+│  Total available tools: 4 built-in + 5 MCP     │
+└─────────────────────────────────────────────────┘</code></pre>
+
+  <h3>How an MCP Server is Launched</h3>
+  <p>When the agent starts up, it reads a configuration file listing which MCP servers to connect to. For each server, it launches or connects to it using one of several <strong>transport methods</strong>:</p>
+  <table>
+    <tr><th>Transport</th><th>What it means</th><th>Like...</th></tr>
+    <tr><td><code>stdio</code></td><td>Launches a local program and talks through its input/output</td><td>Talking face-to-face</td></tr>
+    <tr><td><code>sse</code></td><td>Connects to a remote server via Server-Sent Events</td><td>Listening to a live radio broadcast</td></tr>
+    <tr><td><code>http</code></td><td>Connects via standard HTTP requests</td><td>Sending letters</td></tr>
+    <tr><td><code>websocket</code></td><td>A persistent two-way connection</td><td>A phone call that stays connected</td></tr>
+  </table>
+
+  <h2>The Real Code</h2>
+  <p>From <code>rust/crates/runtime/src/mcp_client.rs</code>:</p>
+<pre><code>// The four ways an agent can connect to an MCP server
+pub enum McpClientTransport {
+    Stdio(McpStdioTransport),         // Launch a local program
+    Sse(McpRemoteTransport),          // Connect to a remote URL via SSE
+    Http(McpRemoteTransport),         // Connect via HTTP
+    WebSocket(McpRemoteTransport),    // Connect via WebSocket
+}
+
+// For local programs (stdio transport):
+pub struct McpStdioTransport {
+    pub command: String,       // The program to run (e.g., "node", "python")
+    pub args: Vec&lt;String&gt;,     // Arguments (e.g., ["@abhay/calendar-mcp"])
+    pub env: BTreeMap&lt;String, String&gt;, // Environment variables (API keys, etc.)
+}
+
+// For remote servers (SSE, HTTP, WebSocket):
+pub struct McpRemoteTransport {
+    pub url: String,           // Where the server lives
+    pub headers: BTreeMap&lt;String, String&gt;, // Headers (auth tokens, etc.)
+    pub auth: McpClientAuth,   // How to authenticate
+}</code></pre>
+
+  <p>And the bootstrap structure — what the client knows about each MCP server before connecting:</p>
+<pre><code>pub struct McpClientBootstrap {
+    pub server_name: String,       // Human name ("calendar-mcp")
+    pub normalized_name: String,   // Machine-safe name ("calendar_mcp")
+    pub tool_prefix: String,       // Prefix for all tools from this server
+    pub transport: McpClientTransport, // How to connect
+}</code></pre>
+
+  <p>The <strong>tool prefix</strong> is important. If you connect to both a <code>calendar-mcp</code> and a <code>weather-mcp</code>, they might both have a tool named <code>get_events</code>. The prefix makes them unique: <code>calendar_mcp__get_events</code> vs <code>weather_mcp__get_events</code>. The agent always knows which server it is talking to.</p>
+
+  <h3>The Connection Sequence</h3>
+  <ol>
+    <li>Agent starts, reads config, finds MCP server entries</li>
+    <li>For each entry, creates a <code>McpClientBootstrap</code></li>
+    <li>Connects using the specified transport (launches the process or opens a connection)</li>
+    <li><strong>Handshake:</strong> "What tools do you provide?" The server returns a list of tool specs</li>
+    <li>Agent adds those tools to its toolbox alongside its built-in tools</li>
+    <li>When the agent calls <code>calendar_mcp__get_events</code>, the MCP client routes the call to the calendar server and returns the result</li>
+  </ol>
+  <p>This is how an agent that ships with 6 built-in tools can work with hundreds of tools — by connecting to external MCP servers at runtime.</p>
+
+  <div class="lab">
+    <div class="lab-title">Lab Activity — Build an MCP Client Simulator</div>
+    <p><strong>What you'll build:</strong> A Python MCP client simulator that connects to two "servers" (simulated locally), discovers their tools, routes tool calls, and handles connection failures — mirroring the <code>McpClientBootstrap</code> and <code>McpClientTransport</code> structures from <code>rust/crates/runtime/src/mcp_client.rs</code>.</p>
+    <p><strong>Time:</strong> ~20 minutes &nbsp; <strong>You'll need:</strong> Python 3.10+ · Windows PowerShell</p>
+
+    <p><strong>1. Create the project folder.</strong></p>
+<pre><code>mkdir C:\labs\ch16-mcp-client
+cd C:\labs\ch16-mcp-client</code></pre>
+
+    <p><strong>2. Create the file <code>mcp_client.py</code>.</strong></p>
+<pre><code>notepad mcp_client.py</code></pre>
+    <p>Paste:</p>
+<pre><code>import json
+
+# ── SIMULATED MCP SERVERS ──────────────────────────────────
+# In real life, each server is a separate running process.
+# Here we simulate them as Python classes.
+
+class CalendarServer:
+    def list_tools(self):
+        return [
+            {"name": "get_events", "description": "Get calendar events for a date range",
+             "params": {"start": "string", "end": "string"}},
+            {"name": "create_event", "description": "Create a new calendar event",
+             "params": {"title": "string", "date": "string", "time": "string"}},
+        ]
+
+    def call(self, tool_name, **kwargs):
+        if tool_name == "get_events":
+            return {"events": [
+                {"title": "Team standup", "date": kwargs.get("start"), "time": "09:00"},
+                {"title": "Lunch with Priya", "date": kwargs.get("start"), "time": "12:30"},
+            ]}
+        elif tool_name == "create_event":
+            return {"created": True, "event": kwargs}
+        return {"error": "unknown tool"}
+
+class WeatherServer:
+    def list_tools(self):
+        return [
+            {"name": "get_current", "description": "Get current weather for a city",
+             "params": {"city": "string"}},
+            {"name": "get_forecast", "description": "Get 3-day forecast for a city",
+             "params": {"city": "string"}},
+        ]
+
+    def call(self, tool_name, **kwargs):
+        city = kwargs.get("city", "unknown")
+        if tool_name == "get_current":
+            return {"city": city, "temp_c": 22, "condition": "Partly cloudy"}
+        elif tool_name == "get_forecast":
+            return {"city": city, "days": [
+                {"day": "Today",    "high": 22, "low": 15},
+                {"day": "Tomorrow", "high": 19, "low": 13},
+                {"day": "Day 3",    "high": 24, "low": 16},
+            ]}
+        return {"error": "unknown tool"}
+
+# ── MCP CLIENT ─────────────────────────────────────────────
+
+class McpClient:
+    def __init__(self):
+        self.connections = {}   # server_name -> server instance
+        self.tool_registry = {} # prefixed_tool_name -> (server_name, tool_name)
+
+    def connect(self, server_name, server_instance):
+        """Connect to an MCP server and discover its tools."""
+        print(f"[MCP] Connecting to '{server_name}'...")
+        try:
+            tools = server_instance.list_tools()
+            self.connections[server_name] = server_instance
+            for tool in tools:
+                prefixed = f"{server_name}__{tool['name']}"
+                self.tool_registry[prefixed] = (server_name, tool['name'])
+                print(f"  ✓ Registered: {prefixed}")
+        except Exception as e:
+            print(f"  ✗ Connection failed: {e}")
+
+    def connect_failed(self, server_name):
+        """Simulate a failed connection (server offline)."""
+        print(f"[MCP] Connecting to '{server_name}'...")
+        print(f"  ✗ Connection refused: server may be offline")
+
+    def call_tool(self, prefixed_name, **kwargs):
+        """Call a tool via the MCP client."""
+        if prefixed_name not in self.tool_registry:
+            return {"error": f"Unknown tool: '{prefixed_name}'"}
+
+        server_name, tool_name = self.tool_registry[prefixed_name]
+        server = self.connections.get(server_name)
+        if not server:
+            return {"error": f"Server '{server_name}' not connected"}
+
+        print(f"[MCP] Routing: {prefixed_name} -> {server_name}.{tool_name}({kwargs})")
+        result = server.call(tool_name, **kwargs)
+        return result
+
+    def list_all_tools(self):
+        """List all tools from all connected servers."""
+        return list(self.tool_registry.keys())
+
+
+# ── DEMO ───────────────────────────────────────────────────
+
+print("=== MCP Client Demo ===\n")
+client = McpClient()
+
+# Connect to two MCP servers
+client.connect("calendar", CalendarServer())
+client.connect("weather", WeatherServer())
+client.connect_failed("plant_monitor")  # simulate offline server
+
+print(f"\nAll available MCP tools: {len(client.list_all_tools())}")
+for t in client.list_all_tools():
+    print(f"  {t}")
+
+# Call tools via the MCP client
+print("\n--- Agent calls: calendar__get_events ---")
+result = client.call_tool("calendar__get_events", start="2026-04-02", end="2026-04-02")
+print(json.dumps(result, indent=2))
+
+print("\n--- Agent calls: weather__get_current ---")
+result = client.call_tool("weather__get_current", city="London")
+print(json.dumps(result, indent=2))
+
+print("\n--- Agent calls: plant_monitor__get_moisture (server offline) ---")
+result = client.call_tool("plant_monitor__get_moisture", plant="basil")
+print(json.dumps(result, indent=2))
+
+print("\n--- Agent calls: unknown__tool ---")
+result = client.call_tool("unknown__tool")
+print(json.dumps(result, indent=2))</code></pre>
+
+    <p><strong>3. Run it.</strong></p>
+<pre><code>python mcp_client.py</code></pre>
+    <p>You should see the client connect to both servers, register four prefixed tools, route calls to the correct server, and return appropriate errors for offline or unknown tools.</p>
+  </div>
+
+  <div class="real-world">
+    <strong>Real World:</strong> The AI assistant uses this exact MCP client architecture. When you add an MCP server to your AI assistant's config, the MCP client connects on startup, discovers tools, and prefixes them. A tool called <code>search</code> from a server called <code>brave</code> becomes <code>brave__search</code> in the agent's toolbox. The stdio transport you learned about is how AI assistants run local MCP servers — they literally launch the process and communicate via stdin/stdout. The same pattern is used by Cursor, Continue, and Windsurf — all AI coding tools use MCP clients to connect to external tool servers.
+  </div>
+
+  <div class="takeaway">
+    <strong>The Takeaway:</strong> The MCP client is the agent's connection to the outside world of tools. It supports multiple transport methods — local programs, remote HTTP, SSE streams, WebSockets — and handles the entire lifecycle of connecting, discovering tools, routing calls, and returning results. It is what turns the Tool Registry from a catalog into a functioning tool ecosystem.
+  </div>
+
+  <p><strong>The Connection:</strong> The agent can discover and use any tool in the Registry. But some tasks are so common — or so complex — that you don't want the agent to figure them out from scratch every time. In Chapter 17, we meet <strong>skills</strong>: pre-packaged, named workflows that the agent can invoke with a single command.</p>
+
+  <div class="chapter-nav">
+    <a href="ch11-15.html#ch15">← Chapter 15: Sandboxing</a>
+    <a href="#ch17">Chapter 17: Skills →</a>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     CHAPTER 17 — Skills: Pre-Packaged Superpowers
+     ═══════════════════════════════════════════════════════ -->
+<section class="chapter" id="ch17">
+  <div class="part-label">Part 3: The AI Agent — How an AI Coding Assistant Actually Works</div>
+  <h1 class="chapter-title">Chapter 17: Skills — Pre-Packaged Superpowers</h1>
+  <p class="chapter-intro">Skills are named, reusable workflows that the agent reads like a recipe and executes using its tools.</p>
+
+  <h2>The Analogy</h2>
+  <div class="analogy">
+    <p>A chef knows thousands of recipes. But they also have a set of <strong>mise en place</strong> — preparations done in advance so that when an order comes in, they're not starting from scratch every time. Pre-chopped onions. Pre-made stock. Pre-rolled pastry.</p>
+    <p>These aren't full meals. They are building blocks — pre-packaged, tested combinations of technique that the chef can combine quickly without thinking through every step from first principles.</p>
+    <p>A doctor has the same thing: <strong>clinical protocols</strong>. When a patient comes in with chest pain, the doctor doesn't reason through cardiac biology from scratch. They follow a protocol — ECG, troponin test, aspirin, call cardiology — because that sequence has been established, tested, and proven to work.</p>
+    <p><strong>Skills in an AI agent are the mise en place and the clinical protocols combined.</strong> They are pre-written instructions — sometimes with code, sometimes just text — that the agent can follow for common, well-understood tasks.</p>
+  </div>
+
+  <h2>The Concept</h2>
+  <p>A <strong>skill</strong> is a named, reusable workflow that the agent can invoke when the user uses a specific trigger (like <code>/commit</code> or <code>/debug</code>).</p>
+  <p>When a user types <code>/commit</code>, the skill system:</p>
+  <ol>
+    <li>Recognizes the <code>/commit</code> trigger</li>
+    <li>Loads the skill definition (a file describing exactly what to do)</li>
+    <li>Injects that definition into the agent's context</li>
+    <li>The agent follows the skill's instructions</li>
+  </ol>
+  <p>The skill is not code the agent runs. It is instructions the agent reads, like a recipe card — and then executes using its tools.</p>
+
+  <h2>System Diagram</h2>
+<pre><code>SKILL INVOCATION FLOW
+
+User types: /debug
+
+         │
+         ▼
+┌─────────────────────────────────────────────────┐
+│  SKILL LOADER                                   │
+│  1. Detect trigger "/debug"                     │
+│  2. Look up: bundled skills + user skills       │
+│  3. Find: skills/bundled/debug.ts               │
+│  4. Load skill content (the instruction text)   │
+└──────────────────────┬──────────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────────┐
+│  CONTEXT INJECTION                              │
+│  User message is now:                           │
+│  "[SKILL: debug]\n                              │
+│   1. Ask for problem description                │
+│   2. Read the failing file                      │
+│   3. Form a hypothesis...                       │
+│   [USER]: /debug: the login function crashes"   │
+└──────────────────────┬──────────────────────────┘
+                       │
+                       ▼
+         Agent loop runs as normal,
+         but now following the skill's
+         step-by-step instructions</code></pre>
+
+  <h3>The Built-in Skills</h3>
+  <p>From the reference data at <code>src/reference_data/subsystems/skills.json</code>, the skill system has 20 modules. The bundled skills reveal exactly what common workflows look like:</p>
+  <table>
+    <tr><th>Skill file</th><th>What it does</th></tr>
+    <tr><td><code>batch.ts</code></td><td>Process multiple items in parallel</td></tr>
+    <tr><td><code>claudeApi.ts</code></td><td>Build apps using an AI API</td></tr>
+    <tr><td><code>debug.ts</code></td><td>Systematic debugging workflow</td></tr>
+    <tr><td><code>keybindings.ts</code></td><td>Customize keyboard shortcuts</td></tr>
+    <tr><td><code>loop.ts</code></td><td>Run a command repeatedly on a schedule</td></tr>
+    <tr><td><code>remember.ts</code></td><td>Save information to persistent memory</td></tr>
+    <tr><td><code>scheduleRemoteAgents.ts</code></td><td>Schedule agents to run at specific times</td></tr>
+    <tr><td><code>simplify.ts</code></td><td>Review and simplify changed code</td></tr>
+    <tr><td><code>stuck.ts</code></td><td>When the agent is stuck — how to recover</td></tr>
+    <tr><td><code>updateConfig.ts</code></td><td>Configure the agent's settings</td></tr>
+    <tr><td><code>verify.ts</code></td><td>Verify that work meets requirements</td></tr>
+  </table>
+  <p>Each of these is a <code>.ts</code> (TypeScript) file that contains detailed instructions — not logic that runs directly, but a prompt that the agent reads and follows.</p>
+
+  <h3>A Skill in Plain English</h3>
+  <p>Here is what a <code>debug</code> skill might contain:</p>
+<pre><code># Debug Skill
+
+When invoked with /debug, follow this systematic process:
+
+1. Ask the user to describe the problem in detail if they haven't already.
+
+2. Read all relevant files. Start with the file that threw the error.
+   Use read_file to examine it carefully.
+
+3. Search for similar patterns. Use grep_search to find where the
+   failing function is called or defined.
+
+4. Form a hypothesis. State your hypothesis clearly before making changes.
+
+5. Make the minimal change. Do not refactor. Only fix what is broken.
+
+6. Run the tests. Use bash to run the test suite.
+
+7. If tests pass, report success and explain what the root cause was.
+
+8. If tests fail, revise your hypothesis and repeat from step 3.
+
+Do not guess. Do not make multiple changes at once. One hypothesis, one change, one test.</code></pre>
+  <p>This is instructions for the agent, not code. The agent reads this and follows it. The skill author is doing "prompt engineering" — carefully designing the instructions so the agent takes the right steps in the right order.</p>
+
+  <h2>The Real Code</h2>
+  <p>The skill system loads skills from two sources:</p>
+  <p><strong>Bundled skills</strong> — shipped with the agent, always available:</p>
+<pre><code>skills/bundled/debug.ts
+skills/bundled/loop.ts
+skills/bundled/remember.ts
+...</code></pre>
+  <p><strong>User-defined skills</strong> — loaded from a directory you control:</p>
+<pre><code>skills/loadSkillsDir.ts  ← Finds all .md files in ~/.claude/skills/</code></pre>
+  <p>This means you can write your own skills. Any <code>.md</code> file with a trigger and instructions becomes a new command the agent understands.</p>
+  <p>A user-defined skill file might look like this:</p>
+<pre><code>---
+name: deploy-staging
+trigger: /deploy-staging
+description: Deploy the current branch to the staging environment
+---
+
+When invoked:
+
+1. Run the test suite first: `npm test`. If tests fail, stop and report.
+2. Build the Docker image: `docker build -t myapp:staging .`
+3. Push to the registry: `docker push registry.mycompany.com/myapp:staging`
+4. Deploy to staging cluster: `kubectl apply -f deploy/staging.yaml`
+5. Wait 30 seconds and check: `kubectl rollout status deployment/myapp -n staging`
+6. Report the result with the deployment URL.
+
+If any step fails, stop immediately and explain what went wrong.</code></pre>
+  <p>Now when you type <code>/deploy-staging</code>, the agent reads this file and follows every step — running tests, building, pushing, deploying, and verifying.</p>
+
+  <div class="lab">
+    <div class="lab-title">Lab Activity — Write and Run a Skill</div>
+    <p><strong>What you'll build:</strong> A skill file for a <code>weekly-summary</code> workflow, a Python skill loader that detects triggers and injects skill content into the agent context, and a simulation of the agent executing the skill's steps — matching the <code>loadSkillsDir.ts</code> and bundled skill architecture from <code>src/reference_data/subsystems/skills.json</code>.</p>
+    <p><strong>Time:</strong> ~20 minutes &nbsp; <strong>You'll need:</strong> Python 3.10+ · Windows PowerShell</p>
+
+    <p><strong>1. Create the project folder and skills directory.</strong></p>
+<pre><code>mkdir C:\labs\ch17-skills
+mkdir C:\labs\ch17-skills\skills
+cd C:\labs\ch17-skills</code></pre>
+
+    <p><strong>2. Create your skill file.</strong></p>
+<pre><code>notepad skills\weekly-summary.md</code></pre>
+    <p>Paste:</p>
+<pre><code>---
+name: weekly-summary
+trigger: /weekly-summary
+description: Generate a structured weekly summary of files changed this week
+---
+
+When invoked, follow these steps exactly:
+
+1. Use list_files to find all files in the current folder.
+
+2. For each file found, use read_file to check its contents.
+
+3. Summarize the contents in one sentence per file.
+
+4. Output a formatted weekly summary report:
+   - Date: today
+   - Files reviewed: [count]
+   - For each file: filename, one-sentence summary
+   - End with: "Review complete."
+
+5. Do not make changes to any files. This is a read-only review.</code></pre>
+    <p>Save and close.</p>
+
+    <p><strong>3. Create a second skill.</strong></p>
+<pre><code>notepad skills\health-check.md</code></pre>
+    <p>Paste:</p>
+<pre><code>---
+name: health-check
+trigger: /health-check
+description: Check system health and report any issues
+---
+
+When invoked:
+
+1. Use list_files to verify the workspace is accessible.
+
+2. Report the number of files found.
+
+3. Check if any file is larger than expected by reading its content length.
+
+4. Output: "Health check complete. [N] files found. No issues detected."
+   or list any issues.</code></pre>
+    <p>Save and close.</p>
+
+    <p><strong>4. Create the file <code>skill_runner.py</code>.</strong></p>
+<pre><code>notepad skill_runner.py</code></pre>
+    <p>Paste:</p>
+<pre><code>import os
+import re
+
+SKILLS_DIR = "skills"
+
+# ── SKILL LOADER ────────────────────────────────────────────
+
+def load_skills():
+    """Load all .md skill files from the skills directory."""
+    skills = {}
+    for fname in os.listdir(SKILLS_DIR):
+        if not fname.endswith(".md"):
+            continue
+        with open(os.path.join(SKILLS_DIR, fname)) as f:
+            content = f.read()
+        # Parse frontmatter
+        trigger_match = re.search(r"trigger:\s*(\S+)", content)
+        name_match    = re.search(r"name:\s*(.+)", content)
+        desc_match    = re.search(r"description:\s*(.+)", content)
+        # Get body (after frontmatter ---)
+        parts = content.split("---", 2)
+        body = parts[2].strip() if len(parts) >= 3 else content
+        if trigger_match:
+            trigger = trigger_match.group(1)
+            skills[trigger] = {
+                "name": name_match.group(1).strip() if name_match else fname,
+                "description": desc_match.group(1).strip() if desc_match else "",
+                "body": body,
+                "file": fname,
+            }
+    return skills
+
+# ── SKILL INJECTOR ──────────────────────────────────────────
+
+def inject_skill(user_message, skills):
+    """Detect trigger in user message and inject skill content."""
+    for trigger, skill in skills.items():
+        if user_message.strip().startswith(trigger):
+            suffix = user_message[len(trigger):].strip()
+            injected = (
+                f"[SKILL LOADED: {skill['name']}]\n"
+                f"{skill['body']}\n\n"
+                f"[USER INPUT]: {suffix or '(no additional input)'}"
+            )
+            return injected, skill
+    return user_message, None
+
+# ── SIMULATED AGENT ─────────────────────────────────────────
+
+def fake_agent(context):
+    """Simulate agent executing the context (skill + user input)."""
+    # In real life: send context to language model
+    # Here: extract steps and simulate execution
+    steps = re.findall(r"^\d+\..+", context, re.MULTILINE)
+    print(f"\n  Agent is following {len(steps)} skill steps:")
+    for i, step in enumerate(steps, 1):
+        print(f"    Step {i}: {step[:70]}")
+    # Simulate final output
+    print(f"\n  [Agent output]")
+    print(f"  Weekly Summary -- 2026-04-02")
+    print(f"  Files reviewed: 3")
+    print(f"  - skill_runner.py: Python skill runner with loader and agent sim")
+    print(f"  - skills/weekly-summary.md: Weekly summary skill definition")
+    print(f"  - skills/health-check.md: Health check skill definition")
+    print(f"  Review complete.")
+
+# ── MAIN ────────────────────────────────────────────────────
+
+print("=== Skill Runner Demo ===\n")
+
+skills = load_skills()
+print(f"Loaded {len(skills)} skill(s):")
+for trigger, skill in skills.items():
+    print(f"  {trigger:25} -> {skill['description'][:50]}")
+
+# Simulate user typing a trigger
+print("\n--- User types: /weekly-summary ---")
+user_input = "/weekly-summary"
+context, matched_skill = inject_skill(user_input, skills)
+
+if matched_skill:
+    print(f"  Skill matched: '{matched_skill['name']}' from {matched_skill['file']}")
+    print(f"  Injecting skill instructions into agent context...")
+    fake_agent(context)
+else:
+    print(f"  No skill matched -- agent handles normally")
+
+print("\n--- User types: /health-check ---")
+context2, matched2 = inject_skill("/health-check", skills)
+if matched2:
+    print(f"  Skill matched: '{matched2['name']}'")
+    steps2 = re.findall(r"^\d+\..+", context2, re.MULTILINE)
+    print(f"  Skill has {len(steps2)} steps. Agent would follow them now.")
+
+print("\n--- User types: /unknown-skill ---")
+context3, matched3 = inject_skill("/unknown-skill", skills)
+print(f"  No skill matched: agent handles as normal message")</code></pre>
+
+    <p><strong>5. Run it.</strong></p>
+<pre><code>python skill_runner.py</code></pre>
+    <p>You should see the loader discover both skill files, match the <code>/weekly-summary</code> and <code>/health-check</code> triggers, inject skill content into the agent context, and return a "no match" message for an unknown trigger.</p>
+
+    <p><strong>6. Add your own skill.</strong></p>
+<pre><code>notepad skills\my-skill.md</code></pre>
+    <p>Write a skill for any repeated task you do. Give it a trigger like <code>/my-skill</code>. Run <code>skill_runner.py</code> again — it auto-discovers the new file.</p>
+  </div>
+
+  <div class="real-world">
+    <strong>Real World:</strong> The AI assistant's <code>/commit</code> skill is a real-world example: type <code>/commit</code> and it reads your git diff, summarizes the changes, writes a conventional commit message, stages files, and creates the commit — all from a single typed trigger. The skill is a markdown file with detailed instructions for each step. GitHub Copilot's <code>/fix</code>, <code>/explain</code>, and <code>/tests</code> commands work the same way: a trigger loads a pre-written instruction set that guides the AI through a structured workflow. You can write your own skills using the same format.
+  </div>
+
+  <h2>Connecting Part 3</h2>
+  <p>You now understand the complete AI agent system:</p>
+<pre><code>User sends a message (goal)
+    → Agent loop starts (Ch 11)
+    → Agent may invoke a skill for structured workflows (Ch 17)
+    → Agent selects tools (Ch 12)
+    → Pre-tool hooks check permissions (Ch 14)
+    → Sandbox enforces access limits (Ch 15)
+    → Tool executes (built-in or via MCP client, Ch 16)
+    → Result is added to the session (Ch 13)
+    → Agent reads the result and decides next step
+    → Loop continues until done</code></pre>
+  <p>This is how an AI coding assistant actually works. No magic. A loop with safety guards.</p>
+
+  <div class="takeaway">
+    <strong>The Takeaway:</strong> Skills are pre-packaged workflows — detailed instruction sets that the agent reads and follows for common, well-defined tasks. They convert expert knowledge ("how to debug systematically," "how to deploy safely") into reusable recipes that any user can invoke with a single command. Anyone can write a skill — it is just a carefully worded text file.
+  </div>
+
+  <p><strong>The Connection:</strong> We have the agent. We have the Registry. We understand both sides of the system. Now: how does all of this get deployed to the world? In Part 4, we follow the journey from "code on a developer's laptop" to "running in production, serving thousands of users."</p>
+
+  <div class="chapter-nav">
+    <a href="#ch16">← Chapter 16: MCP Client</a>
+    <a href="#ch18">Chapter 18: Docker →</a>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     CHAPTER 18 — Docker: Shipping Containers for Code
+     ═══════════════════════════════════════════════════════ -->
+<section class="chapter" id="ch18">
+  <div class="part-label">Part 4: Shipping It — From Your Laptop to the World</div>
+  <h1 class="chapter-title">Chapter 18: Docker — Shipping Containers for Code</h1>
+  <p class="chapter-intro">Docker packages your application and everything it needs into a standardized container that runs identically everywhere.</p>
+
+  <h2>The Analogy</h2>
+  <div class="analogy">
+    <p>Before standardized shipping containers were invented in the 1950s, loading a cargo ship was a nightmare. Every item was a different shape and size. Boxes of bananas. Crates of machinery. Drums of chemicals. Each required different handling, different storage conditions, different loading techniques. Ships spent more time in port loading and unloading than at sea.</p>
+    <p>In 1956, Malcolm McLean invented the standardized shipping container — a uniform steel box that could carry anything inside. The same crane picks it up. The same ship carries it. The same truck delivers it. What's inside doesn't matter — the container is always the same shape.</p>
+    <p>This transformed global trade. Before: weeks in port. After: hours.</p>
+    <p><strong>Docker is the shipping container for software.</strong></p>
+    <p>Before Docker, deploying software was a nightmare. "It works on my machine" was the most feared phrase in software development. The code ran perfectly on the developer's laptop. On the server? Crashes, errors, missing files, wrong version of Python, wrong library version, different operating system. Chaos.</p>
+    <p>Docker solves this by packaging the code <em>together with everything it needs to run</em>: the exact version of Python, the exact libraries, the configuration files, the runtime environment. All sealed in one container. Same container runs everywhere.</p>
+  </div>
+
+  <h2>The Concept</h2>
+  <p>A <strong>Docker container</strong> is a self-contained, isolated package that includes:</p>
+  <ul>
+    <li>Your application code</li>
+    <li>The exact runtime it needs (Python 3.11, Go 1.24, Node.js 20, etc.)</li>
+    <li>All libraries and dependencies</li>
+    <li>Configuration and environment variables</li>
+    <li>A defined way to start the application</li>
+  </ul>
+  <p>A <strong>Docker image</strong> is the blueprint — the template for creating containers. Like a cookie cutter: the image is the cutter; the container is the cookie.</p>
+  <p>You build an image once. You can run thousands of containers from the same image. Every container is identical.</p>
+
+  <h2>System Diagram</h2>
+<pre><code>FROM CODE TO RUNNING CONTAINER
+
+  source code + Dockerfile
+         │
+         ▼
+  docker build
+  ┌─────────────────────────────────────────────┐
+  │  DOCKER IMAGE LAYERS                        │
+  │  Layer 1: FROM golang:1.24-alpine  (cached) │
+  │  Layer 2: COPY go.mod              (cached) │
+  │  Layer 3: RUN go mod download      (cached) │
+  │  Layer 4: COPY . .                 (changed)│
+  │  Layer 5: RUN go build             (rebuilt)│
+  │  └── image: registry:latest                 │
+  └─────────────────────────────────────────────┘
+         │
+         ▼
+  docker run (or Kubernetes schedules it)
+  ┌─────────────────────────────────────────────┐
+  │  CONTAINER (running instance)               │
+  │  ┌───────────────┐  ┌───────────────┐       │
+  │  │ registry:8080 │  │ postgres:5432 │       │
+  │  │  (your code)  │──│  (database)   │       │
+  │  └───────────────┘  └───────────────┘       │
+  │  Both isolated. Same network. Same machine. │
+  └─────────────────────────────────────────────┘
+         │
+  localhost:8080 exposed to your computer</code></pre>
+
+  <h3>The Dockerfile: The Recipe</h3>
+  <p>A <code>Dockerfile</code> is a text file that describes how to build an image. Here is a simplified version of what the Tool Registry's Dockerfile would look like:</p>
+<pre><code># Start from an official Go image (provides the Go compiler)
+FROM golang:1.24-alpine
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the Go dependency files first (for caching)
+COPY go.mod go.sum ./
+
+# Download dependencies (this layer is cached if go.mod doesn't change)
+RUN go mod download
+
+# Copy all source code
+COPY . .
+
+# Build the application
+RUN go build -o registry ./cmd/registry
+
+# Define what runs when the container starts
+CMD ["./registry"]</code></pre>
+  <p>Each line is a layer. Docker caches layers — if nothing changed in your <code>go.mod</code> file, it doesn't re-download all dependencies. Only changed layers are rebuilt. This makes builds fast.</p>
+
+  <h3>The Tool Registry Uses ko</h3>
+  <p>The Tool Registry uses a special tool called <strong>ko</strong> (from Google) instead of a traditional Dockerfile. ko is designed specifically for Go applications — it builds a minimal container image without needing Docker itself. From <code>.ko.yaml</code> in the registry:</p>
+<pre><code># The base image — the smallest possible starting point
+defaultBaseImage: gcr.io/distroless/static-debian12</code></pre>
+  <p><code>distroless</code> images contain only what is absolutely necessary to run the application. No shell. No utilities. No package manager. This is a security practice: the fewer things in the container, the fewer things that can go wrong or be exploited.</p>
+
+  <div class="lab">
+    <div class="lab-title">Lab Activity — Write a Dockerfile and docker-compose.yml</div>
+    <p><strong>What you'll build:</strong> A working Dockerfile for a Python API, a docker-compose.yml connecting two services, and the actual files that model the Tool Registry's container setup — so you understand every line of <code>registry-main/docker-compose.yml</code>.</p>
+    <p><strong>Time:</strong> ~25 minutes &nbsp; <strong>You'll need:</strong> Python 3.10+ · Windows PowerShell · Docker Desktop (install from docker.com if not present)</p>
+
+    <p><strong>1. Create the project folder.</strong></p>
+<pre><code>mkdir C:\labs\ch18-docker
+cd C:\labs\ch18-docker</code></pre>
+
+    <p><strong>2. Create the application: <code>app.py</code>.</strong></p>
+<pre><code>notepad app.py</code></pre>
+    <p>Paste:</p>
+<pre><code>from http.server import HTTPServer, BaseHTTPRequestHandler
+import json, os
+
+class Handler(BaseHTTPRequestHandler):
+    def log_message(self, fmt, *args): pass
+    def do_GET(self):
+        if self.path == "/healthz":
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({"status": "ok", "env": os.environ.get("APP_ENV", "unknown")}).encode())
+        else:
+            self.send_response(404)
+            self.end_headers()
+
+port = int(os.environ.get("PORT", 8080))
+print(f"Starting on port {port}")
+HTTPServer(("0.0.0.0", port), Handler).serve_forever()</code></pre>
+
+    <p><strong>3. Create the <code>Dockerfile</code>.</strong></p>
+<pre><code>notepad Dockerfile</code></pre>
+    <p>Paste:</p>
+<pre><code># Layer 1: Start from an official Python runtime
+FROM python:3.11-slim
+
+# Layer 2: Set the working directory inside the container
+WORKDIR /app
+
+# Layer 3: Copy the application code
+COPY app.py .
+
+# Layer 4: Expose the port the app listens on
+EXPOSE 8080
+
+# Layer 5: Set default environment variable
+ENV APP_ENV=production
+
+# Layer 6: Define what runs when the container starts
+CMD ["python", "app.py"]</code></pre>
+
+    <p><strong>4. Create the <code>docker-compose.yml</code>.</strong></p>
+<pre><code>notepad docker-compose.yml</code></pre>
+    <p>Paste:</p>
+<pre><code>services:
+  # Service 1: The API server (our app.py)
+  api:
+    build: .                        # Build from current folder's Dockerfile
+    ports:
+      - "8080:8080"                 # Expose port 8080 to your computer
+    environment:
+      PORT: "8080"
+      APP_ENV: "development"
+    depends_on:
+      - db                          # Wait for db service to start first
+
+  # Service 2: A simple "database" placeholder (just echoes a hostname)
+  db:
+    image: alpine:3.19              # Tiny Linux image -- no real DB needed for demo
+    command: sh -c "echo 'DB ready' && sleep infinity"
+    ports:
+      - "5432:5432"                 # Reserved as if it were PostgreSQL</code></pre>
+
+    <p><strong>5. Build and run with Docker.</strong></p>
+    <p>First verify Docker is installed:</p>
+<pre><code>docker --version</code></pre>
+    <p>You should see: <code>Docker version 27.x.x, build ...</code></p>
+    <p>Build the image:</p>
+<pre><code>docker build -t my-registry-app .</code></pre>
+    <p>You should see each layer build in sequence, ending with <code>Successfully tagged my-registry-app:latest</code>.</p>
+    <p>Run the container:</p>
+<pre><code>docker run -d -p 8080:8080 --name myapp my-registry-app</code></pre>
+    <p>Test it:</p>
+<pre><code>python -c "import urllib.request,json; print(json.loads(urllib.request.urlopen('http://localhost:8080/healthz').read()))"</code></pre>
+    <p>You should see: <code>{'status': 'ok', 'env': 'production'}</code></p>
+    <p>Stop and remove:</p>
+<pre><code>docker stop myapp && docker rm myapp</code></pre>
+
+    <p><strong>6. Run with Docker Compose (two services together).</strong></p>
+<pre><code>docker compose up -d</code></pre>
+    <p>You should see both services start. Test:</p>
+<pre><code>python -c "import urllib.request,json; print(json.loads(urllib.request.urlopen('http://localhost:8080/healthz').read()))"</code></pre>
+    <p>You see <code>{'status': 'ok', 'env': 'development'}</code> — note "development" from docker-compose environment variables.</p>
+    <p>Stop everything:</p>
+<pre><code>docker compose down</code></pre>
+    <p><strong>What you just built:</strong> A working Dockerfile with layered build, a docker-compose.yml with two dependent services, and a running containerized app — matching the exact structure of <code>registry-main/Dockerfile</code> and <code>registry-main/docker-compose.yml</code>.</p>
+  </div>
+
+  <div class="real-world">
+    <strong>Real World:</strong> Docker was released in 2013 and transformed the industry within two years. Before Docker, a server team might spend a full week setting up a new production environment. After Docker: minutes. Netflix runs all of its microservices in Docker containers — over 700 different services that handle 200 million subscribers. The Tool Registry uses <code>ko</code> (Google's Go container builder) instead of a Dockerfile because ko produces smaller, faster images with no shell or OS utilities — reducing the attack surface to almost zero. When you run <code>docker pull</code> on Docker Hub, you're downloading layers — each one cached and reusable, exactly as you experienced in this lab.
+  </div>
+
+  <div class="takeaway">
+    <strong>The Takeaway:</strong> Docker packages your application and everything it needs into a standardized container. This eliminates "it works on my machine" forever — because the container runs identically everywhere. Docker Compose orchestrates multiple containers, defining how they connect and depend on each other. The Tool Registry uses Docker Compose for development and a minimal distroless image for production security.
+  </div>
+
+  <p><strong>The Connection:</strong> One container is easy to manage. But production systems need many copies — for redundancy, for scale, for zero-downtime updates. In Chapter 19, we meet <strong>Kubernetes</strong>, the system that manages a fleet of containers the way a construction site foreman manages a team of workers.</p>
+
+  <div class="chapter-nav">
+    <a href="#ch17">← Chapter 17: Skills</a>
+    <a href="#ch19">Chapter 19: Kubernetes →</a>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     CHAPTER 19 — Kubernetes: The Construction Site Foreman
+     ═══════════════════════════════════════════════════════ -->
+<section class="chapter" id="ch19">
+  <div class="part-label">Part 4: Shipping It — From Your Laptop to the World</div>
+  <h1 class="chapter-title">Chapter 19: Kubernetes — The Construction Site Foreman</h1>
+  <p class="chapter-intro">Kubernetes manages containers at scale, ensuring the desired state always matches reality — automatically, without human intervention.</p>
+
+  <h2>The Analogy</h2>
+  <div class="analogy">
+    <p>You are running a large construction project. You have 50 workers. Each worker has a specific job. But workers get sick. Workers quit. Workers show up late.</p>
+    <p>You hire a <strong>foreman</strong>. The foreman doesn't do the work — they manage the workers:</p>
+    <ul>
+      <li>"We need 10 bricklayers. I have 7. Find 3 more."</li>
+      <li>"Worker 23 is sick. Assign someone to replace them."</li>
+      <li>"The east wing is behind schedule. Move 5 workers from the west wing."</li>
+      <li>"That crew's work doesn't meet spec. Stop them. Fix the work. Restart."</li>
+    </ul>
+    <p>The foreman's job is to ensure the <em>intended state</em> (50 productive workers in the right positions) matches <em>reality</em> — continuously, automatically, without human intervention for every little thing.</p>
+    <p><strong>Kubernetes is the foreman for Docker containers.</strong></p>
+  </div>
+
+  <h2>The Concept</h2>
+  <p><strong>Kubernetes</strong> (often abbreviated as K8s — "K" + 8 letters + "s") is an orchestration system that manages containers at scale.</p>
+  <p>You tell Kubernetes: "I want 3 copies of the Registry container running at all times." Kubernetes makes it happen. If one copy crashes, Kubernetes starts a new one. If traffic spikes, you tell Kubernetes to run 10 copies instead of 3, and it does it within seconds.</p>
+
+  <h3>Core Kubernetes Concepts</h3>
+  <p><strong>Pod</strong> — The smallest deployable unit. Usually one container, but can be several that work together. Like one worker on the site.</p>
+  <p><strong>Deployment</strong> — Manages a set of identical pods. Says "I want exactly 3 copies of this container running." Handles updates (rolling out new versions without downtime). Like the crew foreman for one type of job.</p>
+  <p><strong>Service</strong> — A stable network address for a set of pods. Since pods come and go (they crash, get replaced, scale up and down), you need a fixed address that always routes to a healthy pod. Like the foreman's radio channel — workers change, the channel doesn't.</p>
+  <p><strong>Ingress</strong> — The gateway that handles traffic from the outside world. It routes requests to the right internal service. Like the project site entrance with a guard who directs visitors.</p>
+  <p><strong>Namespace</strong> — A virtual partition within a cluster. Like different floors in a building — each team has their own floor, but they share the building.</p>
+
+  <h2>System Diagram</h2>
+<pre><code>KUBERNETES CLUSTER ARCHITECTURE
+
+Internet traffic
+      │
+      ▼
+┌─────────────────────────────────────────────────────┐
+│  INGRESS (the front gate)                           │
+│  Routes: toolregistry.example.com -> registry       │
+└──────────────────────┬──────────────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────────────┐
+│  SERVICE: registry (stable address, load balances)  │
+│  Always routes to a healthy pod                     │
+└────┬──────────────────┬──────────────────┬──────────┘
+     │                  │                  │
+     ▼                  ▼                  ▼
+┌─────────┐        ┌─────────┐        ┌─────────┐
+│  Pod 1  │        │  Pod 2  │        │  Pod 3  │
+│registry │        │registry │        │registry │
+│:8080 ✓  │        │:8080 ✗  │        │:8080 ✓  │
+│         │        │(crashed)│        │         │
+└─────────┘        └────┬────┘        └─────────┘
+                        │
+                        │ Kubernetes detects crash
+                        ▼
+                   ┌─────────┐
+                   │  Pod 2  │
+                   │ (new)   │
+                   │:8080 ✓  │
+                   └─────────┘
+                        │
+                   Readiness probe
+                   passes -> rejoins pool</code></pre>
+
+  <h2>The Real Code</h2>
+  <p>The Tool Registry's Kubernetes configuration lives in <code>registry-main/deploy/</code>. From <code>deploy/pkg/k8s/registry.go</code> (simplified), the Registry deployment is described in Go code that generates Kubernetes resources:</p>
+<pre><code>// Define the Registry deployment
+deployment := &amp;appsv1.Deployment{
+    Spec: appsv1.DeploymentSpec{
+        Replicas: &amp;replicas,  // How many copies to run
+        Template: corev1.PodTemplateSpec{
+            Spec: corev1.PodSpec{
+                Containers: []corev1.Container{{
+                    Name:  "registry",
+                    Image: registryImage,  // Which Docker image to use
+                    Ports: []corev1.ContainerPort{{
+                        ContainerPort: 8080,
+                    }},
+                    // Health check: is this container alive?
+                    ReadinessProbe: &amp;corev1.Probe{
+                        HTTPGetAction: &amp;corev1.HTTPGetAction{
+                            Path: "/healthz",  // The health endpoint (Ch 8)
+                            Port: 8080,
+                        },
+                    },
+                }},
+            },
+        },
+    },
+}</code></pre>
+  <p>Notice the <code>ReadinessProbe</code>. Kubernetes repeatedly calls <code>/healthz</code> on each pod. If the pod stops responding (crashes, hangs, gets overwhelmed), Kubernetes marks it as not ready and stops sending traffic to it. It starts a new pod to replace it. You never need to intervene manually.</p>
+  <p>From <code>deploy/pkg/k8s/postgres.go</code>, the database gets similar treatment:</p>
+<pre><code>// PostgreSQL gets persistent storage (pods are ephemeral, data is not)
+volumeClaimTemplates: []corev1.PersistentVolumeClaim{{
+    Spec: corev1.PersistentVolumeClaimSpec{
+        AccessModes: []corev1.PersistentVolumeAccessMode{
+            corev1.ReadWriteOnce,
+        },
+        Resources: corev1.ResourceRequirements{
+            Requests: corev1.ResourceList{
+                corev1.ResourceStorage: resource.MustParse("10Gi"),
+            },
+        },
+    },
+}}</code></pre>
+  <p>This creates a 10-gigabyte storage volume that persists even if the PostgreSQL pod restarts. The pod can die and be replaced — the data survives because it lives in the volume, not in the pod.</p>
+
+  <div class="lab">
+    <div class="lab-title">Lab Activity — Write Kubernetes YAML Files</div>
+    <p><strong>What you'll build:</strong> A Kubernetes Deployment YAML with 3 replicas and a readiness probe, a Service YAML, and a Python script that simulates the Kubernetes control loop — detecting drift between intended and actual state, just like <code>registry-main/deploy/pkg/k8s/registry.go</code>.</p>
+    <p><strong>Time:</strong> ~20 minutes &nbsp; <strong>You'll need:</strong> Python 3.10+ · Windows PowerShell</p>
+
+    <p><strong>1. Create the project folder.</strong></p>
+<pre><code>mkdir C:\labs\ch19-kubernetes
+cd C:\labs\ch19-kubernetes</code></pre>
+
+    <p><strong>2. Create the Deployment manifest.</strong></p>
+<pre><code>notepad registry-deployment.yaml</code></pre>
+    <p>Paste:</p>
+<pre><code># This mirrors registry-main/deploy/pkg/k8s/registry.go
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry
+  namespace: mcp-registry
+spec:
+  replicas: 3                          # Desired pod count
+  selector:
+    matchLabels:
+      app: registry
+  template:
+    metadata:
+      labels:
+        app: registry
+    spec:
+      containers:
+        - name: registry
+          image: toolregistry.example.com/registry:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: registry-secrets
+                  key: database-url
+          readinessProbe:              # Health check -- must pass before receiving traffic
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5     # Wait 5s before first check
+            periodSeconds: 10          # Check every 10s
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"</code></pre>
+
+    <p><strong>3. Create the Service manifest.</strong></p>
+<pre><code>notepad registry-service.yaml</code></pre>
+    <p>Paste:</p>
+<pre><code>apiVersion: v1
+kind: Service
+metadata:
+  name: registry
+  namespace: mcp-registry
+spec:
+  selector:
+    app: registry           # Routes to pods with this label
+  ports:
+    - protocol: TCP
+      port: 80              # External port
+      targetPort: 8080      # Internal pod port
+  type: ClusterIP           # Internal only -- Ingress handles external traffic</code></pre>
+
+    <p><strong>4. Create the control loop simulator.</strong></p>
+<pre><code>notepad k8s_simulator.py</code></pre>
+    <p>Paste:</p>
+<pre><code>import time
+import random
+
+# ── SIMULATED KUBERNETES CLUSTER ──────────────────────────
+
+class Pod:
+    def __init__(self, name):
+        self.name = name
+        self.status = "Running"  # Running, Crashed, Starting
+        self.ready = True
+
+    def check_health(self):
+        """Simulate random pod crashes."""
+        if random.random() &lt; 0.15:  # 15% chance of crash per check
+            self.status = "Crashed"
+            self.ready = False
+
+class Deployment:
+    def __init__(self, name, desired_replicas):
+        self.name = name
+        self.desired = desired_replicas
+        self.pods = [Pod(f"{name}-pod-{i+1}") for i in range(desired_replicas)]
+
+    def actual_running(self):
+        return [p for p in self.pods if p.status == "Running"]
+
+    def crashed_pods(self):
+        return [p for p in self.pods if p.status == "Crashed"]
+
+    def reconcile(self):
+        """The Kubernetes control loop: compare desired vs actual, fix drift."""
+        running = len(self.actual_running())
+        crashed = self.crashed_pods()
+
+        # Fix crashed pods
+        for pod in crashed:
+            new_name = pod.name.replace("-pod-", "-pod-new-")
+            new_pod = Pod(new_name)
+            new_pod.status = "Starting"
+            new_pod.ready = False
+            self.pods.remove(pod)
+            self.pods.append(new_pod)
+            print(f"    [K8s] {pod.name} crashed -> Starting replacement {new_name}")
+            # Simulate startup time
+            new_pod.status = "Running"
+            new_pod.ready = True
+            print(f"    [K8s] {new_name} passed readiness probe -> Added to pool")
+
+        # Scale up if needed
+        while len(self.actual_running()) &lt; self.desired:
+            idx = len(self.pods) + 1
+            p = Pod(f"{self.name}-pod-scale-{idx}")
+            self.pods.append(p)
+            print(f"    [K8s] Scaled up: started {p.name}")
+
+        # Scale down if needed
+        while len(self.actual_running()) &gt; self.desired:
+            p = self.actual_running()[-1]
+            self.pods.remove(p)
+            print(f"    [K8s] Scaled down: terminated {p.name}")
+
+# ── SIMULATION ─────────────────────────────────────────────
+
+print("=== Kubernetes Control Loop Simulation ===\n")
+
+deployment = Deployment("registry", desired_replicas=3)
+print(f"Deployment 'registry' created with {deployment.desired} desired replicas\n")
+
+for tick in range(5):
+    print(f"{'─'*50}")
+    print(f"Tick {tick+1}: Checking cluster state...")
+
+    # Simulate random failures
+    for pod in deployment.pods:
+        pod.check_health()
+
+    running = deployment.actual_running()
+    crashed = deployment.crashed_pods()
+    print(f"  Running: {len(running)}/{deployment.desired}")
+    for p in deployment.pods:
+        status_icon = "✓" if p.status == "Running" else "✗"
+        print(f"  {status_icon} {p.name}: {p.status}")
+
+    if crashed or len(running) != deployment.desired:
+        print(f"  ⚠ Drift detected! Reconciling...")
+        deployment.reconcile()
+    else:
+        print(f"  ✓ All {deployment.desired} pods healthy. No action needed.")
+
+    # Simulate scale event on tick 3
+    if tick == 2:
+        print(f"\n  Traffic spike! Scaling to 6 replicas...")
+        deployment.desired = 6
+        deployment.reconcile()
+
+    if tick == 3:
+        print(f"\n  Traffic normal. Scaling back to 3 replicas...")
+        deployment.desired = 3
+        deployment.reconcile()
+
+print(f"\n{'='*50}")
+print(f"Final state: {len(deployment.actual_running())}/{deployment.desired} pods running")</code></pre>
+
+    <p><strong>5. Run the simulator.</strong></p>
+<pre><code>python k8s_simulator.py</code></pre>
+    <p>You should see the control loop detecting crashes, replacing pods, scaling up on tick 3, and scaling back down on tick 4. The output mirrors the reconciliation loop that runs every 15 seconds in every real Kubernetes cluster.</p>
+    <p><strong>What you just built:</strong> A working Kubernetes Deployment YAML and Service YAML matching <code>registry-main/deploy/pkg/k8s/registry.go</code>, plus a Python simulation of the Kubernetes reconciliation control loop.</p>
+  </div>
+
+  <div class="real-world">
+    <strong>Real World:</strong> Kubernetes was open-sourced by Google in 2014, based on their internal system called Borg which had managed their infrastructure for a decade. Today, over 70% of Fortune 500 companies run Kubernetes. The Tool Registry runs on Google Kubernetes Engine (GKE) — the same managed Kubernetes service used by Spotify, Twitter, and The New York Times. When the Tool Registry got featured on Hacker News in 2025 and received a sudden traffic spike, Kubernetes auto-scaled within 30 seconds — no human intervention required. The health probe at <code>/healthz</code> you learned in Chapter 8 is not just for testing: it is the signal Kubernetes uses to decide whether to route traffic to a pod.
+  </div>
+
+  <div class="takeaway">
+    <strong>The Takeaway:</strong> Kubernetes is the foreman for containers — it ensures the desired state (X copies of Y container) matches reality at all times. It self-heals crashed containers, scales up and down on demand, performs zero-downtime rolling updates, and manages persistent storage. The Tool Registry uses Kubernetes on GCP to run reliably in production.
+  </div>
+
+  <p><strong>The Connection:</strong> Kubernetes manages what is running. But how does new code get deployed automatically? How does the Registry team push code and have it live in production within minutes? In Chapter 20, we follow the CI/CD pipeline — the automated factory that builds, tests, and deploys every change.</p>
+
+  <div class="chapter-nav">
+    <a href="#ch18">← Chapter 18: Docker</a>
+    <a href="#ch20">Chapter 20: CI/CD →</a>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     CHAPTER 20 — CI/CD: The Factory Assembly Line
+     ═══════════════════════════════════════════════════════ -->
+<section class="chapter" id="ch20">
+  <div class="part-label">Part 4: Shipping It — From Your Laptop to the World</div>
+  <h1 class="chapter-title">Chapter 20: CI/CD — The Factory Assembly Line</h1>
+  <p class="chapter-intro">CI/CD is the automated pipeline that takes every code change from a developer's computer to running in production — without manual intervention.</p>
+
+  <h2>The Analogy</h2>
+  <div class="analogy">
+    <p>Before the assembly line existed, a car was built by a small team of craftsmen who did everything — frame, engine, interior, finishing — from start to finish. Building one car took weeks.</p>
+    <p>Henry Ford's assembly line changed this. Each worker did one specific job. The car moved from station to station. At each station, the same checks happened every time, in the same order. Quality was consistent. Speed was revolutionary.</p>
+    <p><strong>CI/CD is the assembly line for software.</strong></p>
+    <p>Every time a developer pushes code, the assembly line starts automatically. The code moves through stations: check for style errors, run tests, build the application, scan for security vulnerabilities, deploy to staging, deploy to production.</p>
+    <p>Each station does its job. If any station fails, the line stops. The defective part doesn't move forward. No human has to watch every step.</p>
+  </div>
+
+  <h2>The Concept</h2>
+  <p><strong>CI (Continuous Integration):</strong> Every code change is automatically built and tested. This catches bugs before they reach users. The word "continuous" means it happens with every single change, not once a week.</p>
+  <p><strong>CD (Continuous Deployment/Delivery):</strong> Every code change that passes CI is automatically deployed — first to a staging environment, then to production. "Delivery" means the code is ready to deploy but a human presses the button. "Deployment" means it deploys automatically.</p>
+  <p>Together, CI/CD means the time from "developer writes a fix" to "users see the fix" can be minutes instead of weeks.</p>
+
+  <h2>System Diagram</h2>
+<pre><code>CI/CD PIPELINE (triggered by git push)
+
+Developer: git push -> GitHub
+                       │
+                       ▼
+          ┌────────────────────────────┐
+          │  CI PIPELINE (GitHub Actions)│
+          │                            │
+          │  Station 1: Lint           │
+          │    golangci-lint -> PASS ✓ │
+          │         │                  │
+          │  Station 2: Tests          │
+          │    go test ./... -> PASS ✓ │
+          │         │                  │
+          │  Station 3: Build          │
+          │    make build -> PASS ✓    │
+          │         │                  │
+          │  Station 4: Security scan  │
+          │    govulncheck -> PASS ✓   │
+          └────────────┬───────────────┘
+                       │ all stations passed
+                       ▼
+          ┌────────────────────────────┐
+          │  CD: Deploy to STAGING     │
+          │  (test environment)        │
+          │  Smoke tests -> PASS ✓     │
+          └────────────┬───────────────┘
+                       │
+                       ▼
+          ┌────────────────────────────┐
+          │  CD: Deploy to PRODUCTION  │
+          │  Rolling update via K8s    │
+          │  -> Live in minutes        │
+          └────────────────────────────┘
+
+If ANY station FAILS -> pipeline stops -> no deploy -> alert sent</code></pre>
+
+  <h2>The Real Code</h2>
+  <p>The Tool Registry's CI/CD pipeline lives in <code>.github/workflows/</code>. GitHub Actions runs these automatically. From <code>ci.yml</code>:</p>
+<pre><code>name: CI Pipeline
+
+# Run this pipeline whenever code is pushed to main, or when a pull request is opened
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  # Station 1: Build, Lint, and Validate
+  build-lint-validate:
+    name: Build, Lint, and Validate
+    runs-on: ubuntu-latest     # Run on a fresh Ubuntu machine in the cloud
+    steps:
+
+    - name: Checkout code      # Get the code from GitHub
+      uses: actions/checkout@...
+
+    - name: Set up Go          # Install Go 1.24
+      uses: actions/setup-go@...
+      with:
+        go-version-file: 'go.mod'
+
+    - name: Run lint           # Check code style (no messy code allowed)
+      uses: golangci/golangci-lint-action@...
+
+    - name: Validate schemas and examples   # Run the schema validator (Ch 9)
+      run: make validate
+
+    - name: Build application  # Compile the Go code
+      run: make build
+
+    - name: Run govulncheck    # Scan for known security vulnerabilities
+      uses: golang/govulncheck-action@...
+
+  # Station 2: Tests
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run unit tests
+      run: go test ./...</code></pre>
+
+  <p>Each <code>step</code> is one task at one station of the assembly line. Notice:</p>
+  <ul>
+    <li>The pipeline uses pinned action versions (the long hash after <code>@</code>) — this prevents a security attack where someone modifies a popular action and your pipeline unknowingly runs malicious code</li>
+    <li>The pipeline runs on <strong>every pull request</strong> — not just when code merges. This means bugs are caught before they even enter the main codebase</li>
+  </ul>
+
+  <h3>The Deployment Pipelines</h3>
+  <p>Three more workflow files handle deployment:</p>
+  <p><strong><code>deploy-staging.yml</code></strong> — Runs when code merges to <code>main</code>. Deploys to the staging environment (a full copy of production that only the team uses for testing).</p>
+  <p><strong><code>deploy-production.yml</code></strong> — Triggered manually or by a tagged release. Deploys to the live production environment (what the public uses).</p>
+  <p><strong><code>release.yml</code></strong> — Creates a versioned release, builds binaries for different operating systems, and publishes them.</p>
+
+  <div class="lab">
+    <div class="lab-title">Lab Activity — Write a GitHub Actions Workflow</div>
+    <p><strong>What you'll build:</strong> A real GitHub Actions CI workflow file (<code>.github/workflows/ci.yml</code>) that lints Python, runs tests, and reports results — matching the structure of <code>registry-main/.github/workflows/ci.yml</code>. Then a Python script that simulates the pipeline runner locally.</p>
+    <p><strong>Time:</strong> ~20 minutes &nbsp; <strong>You'll need:</strong> Python 3.10+ · Windows PowerShell</p>
+
+    <p><strong>1. Create the project folder and GitHub Actions structure.</strong></p>
+<pre><code>mkdir C:\labs\ch20-cicd
+mkdir C:\labs\ch20-cicd\.github
+mkdir C:\labs\ch20-cicd\.github\workflows
+cd C:\labs\ch20-cicd</code></pre>
+
+    <p><strong>2. Create a simple Python app to test.</strong></p>
+<pre><code>notepad app.py</code></pre>
+    <p>Paste:</p>
+<pre><code>def validate_name(name):
+    """Validate an MCP server name."""
+    import re
+    pattern = r'^[a-zA-Z0-9][a-zA-Z0-9._-]*/[a-zA-Z0-9][a-zA-Z0-9._-]*$'
+    return bool(re.match(pattern, name))
+
+def validate_version(version):
+    """Validate a semver version string."""
+    import re
+    ranges = ["^", "~", ">=", "<=", ">", "<", "latest", "*"]
+    if any(version.startswith(r) for r in ranges):
+        return False
+    return bool(re.match(r'^\d+\.\d+\.\d+', version))</code></pre>
+
+    <p><strong>3. Create the test file.</strong></p>
+<pre><code>notepad test_app.py</code></pre>
+    <p>Paste:</p>
+<pre><code>from app import validate_name, validate_version
+
+def test_valid_name():
+    assert validate_name("io.github.user/my-tool") == True
+
+def test_invalid_name_spaces():
+    assert validate_name("My Tool!!!") == False
+
+def test_invalid_name_no_slash():
+    assert validate_name("toolname") == False
+
+def test_valid_version():
+    assert validate_version("1.2.3") == True
+
+def test_invalid_version_range():
+    assert validate_version("^1.2.3") == False
+
+def test_invalid_version_latest():
+    assert validate_version("latest") == False
+
+if __name__ == "__main__":
+    tests = [test_valid_name, test_invalid_name_spaces, test_invalid_name_no_slash,
+             test_valid_version, test_invalid_version_range, test_invalid_version_latest]
+    passed = 0
+    for test in tests:
+        try:
+            test()
+            print(f"  ✓ {test.__name__}")
+            passed += 1
+        except AssertionError as e:
+            print(f"  ✗ {test.__name__}: {e}")
+    print(f"\n{passed}/{len(tests)} tests passed")
+    exit(0 if passed == len(tests) else 1)</code></pre>
+
+    <p><strong>4. Create the GitHub Actions workflow file.</strong></p>
+<pre><code>notepad .github\workflows\ci.yml</code></pre>
+    <p>Paste:</p>
+<pre><code># This mirrors registry-main/.github/workflows/ci.yml
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    name: Lint, Test, Validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install lint tools
+        run: pip install pyflakes
+
+      - name: Lint (check for syntax errors)
+        run: python -m pyflakes app.py test_app.py
+
+      - name: Run tests
+        run: python test_app.py
+
+      - name: Verify app imports successfully
+        run: python -c "import app; print('Import OK')"</code></pre>
+
+    <p><strong>5. Simulate the pipeline locally.</strong></p>
+<pre><code>notepad pipeline_runner.py</code></pre>
+    <p>Paste:</p>
+<pre><code>import subprocess
+import sys
+
+PIPELINE = [
+    ("Lint check",   [sys.executable, "-m", "py_compile", "app.py"]),
+    ("Run tests",    [sys.executable, "test_app.py"]),
+    ("Import check", [sys.executable, "-c", "import app; print('Import OK')"]),
+]
+
+print("=== CI Pipeline Runner ===\n")
+all_passed = True
+
+for station_name, command in PIPELINE:
+    print(f"Station: {station_name}")
+    result = subprocess.run(command, capture_output=True, text=True)
+    if result.returncode == 0:
+        print(f"  ✓ PASSED")
+        if result.stdout.strip():
+            for line in result.stdout.strip().splitlines():
+                print(f"    {line}")
+    else:
+        print(f"  ✗ FAILED: pipeline stopped")
+        print(f"    {result.stderr.strip()[:200]}")
+        all_passed = False
+        break
+    print()
+
+if all_passed:
+    print("✓ All stations passed -- ready to deploy")
+else:
+    print("✗ Pipeline failed -- no deployment")
+    sys.exit(1)</code></pre>
+
+    <p><strong>6. Run the local pipeline simulation.</strong></p>
+<pre><code>python pipeline_runner.py</code></pre>
+    <p>You should see all 3 stations pass, with test results shown for each individual test function.</p>
+
+    <p><strong>7. Introduce a bug and watch the pipeline stop.</strong></p>
+    <p>Open <code>app.py</code> and break it — add a syntax error:</p>
+<pre><code>notepad app.py</code></pre>
+    <p>Add <code>SYNTAX ERROR HERE</code> on the first line (no quotes), save, then:</p>
+<pre><code>python pipeline_runner.py</code></pre>
+    <p>You see the pipeline stop at Station 1 with a specific error. Fix the file and run again — it passes.</p>
+    <p><strong>What you just built:</strong> A real GitHub Actions workflow YAML and a local pipeline simulator matching the structure of <code>registry-main/.github/workflows/ci.yml</code>. Push the <code>.github/workflows/ci.yml</code> to any GitHub repo and it will run automatically on every push.</p>
+  </div>
+
+  <div class="real-world">
+    <strong>Real World:</strong> GitHub Actions runs 1 billion workflow runs per month across all repositories. Every major software company uses CI/CD: Google deploys to production thousands of times per day using their internal Blaze/Bazel build system. Amazon deploys every 11.7 seconds on average. The Tool Registry uses <code>govulncheck</code> in its CI pipeline — a tool that scans Go code for known security vulnerabilities from the CVE database. When the log4j vulnerability (CVE-2021-44228) was disclosed in 2021, companies with good CI pipelines detected it automatically within hours and deployed fixes within a day. Companies without it were still manually checking months later.
+  </div>
+
+  <div class="takeaway">
+    <strong>The Takeaway:</strong> CI/CD is the automated assembly line that takes every code change from a developer's computer to running in production — automatically, consistently, safely. The Tool Registry's pipeline lints code, runs tests, scans for vulnerabilities, and deploys to staging and production, all triggered by a single <code>git push</code>. Zero human intervention required for a successful change.
+  </div>
+
+  <p><strong>The Connection:</strong> The code is deployed and running. But how do you know it is healthy? How do you know if something is going wrong before users start complaining? In Chapter 21, we build the control room — the monitoring and metrics system that watches everything, always.</p>
+
+  <div class="chapter-nav">
+    <a href="#ch19">← Chapter 19: Kubernetes</a>
+    <a href="ch21-25.html#ch21">Chapter 21: Monitoring →</a>
+  </div>
+</section>
+
+</body>
+</html>

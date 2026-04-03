@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Architect's Blueprint: Chapters 1-5</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --text: #1a1a1a;
+    --muted: #6b7280;
+    --accent: #1d4ed8;
+    --accent-light: #eff6ff;
+    --border: #e5e7eb;
+    --code-bg: #f3f4f6;
+    --lab-bg: #f0fdf4;
+    --lab-border: #86efac;
+    --rw-bg: #fffbeb;
+    --rw-border: #fcd34d;
+    --nav-bg: #1e293b;
+    --nav-text: #e2e8f0;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--text);
+    background: var(--bg);
+  }
+
+  /* Navigation */
+  .top-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--nav-bg);
+    border-bottom: 2px solid #334155;
+  }
+  .nav-inner {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0.6rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .book-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--nav-text);
+    opacity: 0.85;
+    flex-shrink: 0;
+  }
+  .batch-label {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    flex-shrink: 0;
+  }
+  .chapter-links {
+    display: flex;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+    margin-left: auto;
+  }
+  .chapter-links a {
+    color: #93c5fd;
+    text-decoration: none;
+    font-size: 0.8rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    border: 1px solid #334155;
+    transition: background 0.15s;
+  }
+  .chapter-links a:hover { background: #334155; color: #fff; }
+
+  /* Main layout */
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  /* Chapter container */
+  .chapter {
+    padding-bottom: 3rem;
+    border-bottom: 2px solid var(--border);
+    margin-top: 3rem;
+  }
+  .chapter:first-child { margin-top: 0; }
+  .chapter:last-child { border-bottom: none; }
+
+  /* Chapter header */
+  .part-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+  }
+  .chapter-title {
+    font-size: 1.85rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 1.8rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Section headings */
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: 2.2rem;
+    margin-bottom: 0.75rem;
+  }
+  h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Body copy */
+  p { margin-bottom: 1rem; }
+  ul, ol { margin-bottom: 1rem; padding-left: 1.6rem; }
+  li { margin-bottom: 0.3rem; }
+  strong { font-weight: 600; }
+  em { font-style: italic; }
+
+  /* Inline code */
+  code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.875rem;
+    background: var(--code-bg);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+  }
+
+  /* Code blocks */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    overflow-x: auto;
+    margin-bottom: 1.2rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    white-space: pre;
+  }
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: inherit;
+  }
+
+  /* ASCII diagrams */
+  .diagram {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    overflow-x: auto;
+    margin: 0.5rem 0 1.2rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    white-space: pre;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.2rem;
+    font-size: 0.9rem;
+  }
+  th {
+    background: var(--code-bg);
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  td {
+    padding: 0.45rem 0.75rem;
+    border: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #fafafa; }
+
+  /* Blockquote */
+  blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 0.6rem 1rem;
+    background: var(--accent-light);
+    margin: 0.5rem 0 1.2rem;
+    border-radius: 0 4px 4px 0;
+  }
+  blockquote p { margin-bottom: 0; font-style: italic; }
+
+  /* Lab Activity */
+  .lab {
+    background: var(--lab-bg);
+    border: 1px solid var(--lab-border);
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    margin: 1.5rem 0;
+  }
+  .lab-header {
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+    color: #166534;
+  }
+  .lab-meta {
+    font-size: 0.82rem;
+    color: #15803d;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #bbf7d0;
+  }
+
+  /* Real World */
+  .real-world {
+    background: var(--rw-bg);
+    border: 1px solid var(--rw-border);
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin: 1.5rem 0;
+    font-size: 0.92rem;
+  }
+  .real-world-header {
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #92400e;
+    margin-bottom: 0.5rem;
+  }
+  .real-world p { margin-bottom: 0; }
+
+  /* Step label */
+  .step {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.1em 0.45em;
+    border-radius: 3px;
+    margin-right: 0.4rem;
+    vertical-align: middle;
+  }
+
+  /* Success */
+  .success {
+    font-size: 0.85rem;
+    color: #166534;
+    font-weight: 500;
+    margin: 0.3rem 0 0.8rem;
+  }
+
+  /* Takeaway box */
+  .takeaway {
+    background: #f1f5f9;
+    border-left: 4px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    padding: 0.9rem 1.1rem;
+    margin: 1.8rem 0 1rem;
+  }
+  .takeaway h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+  .takeaway p { margin-bottom: 0; font-size: 0.95rem; }
+
+  /* Chapter nav */
+  .chapter-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.85rem;
+  }
+  .chapter-nav a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .chapter-nav a:hover { text-decoration: underline; }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 1.8rem 0;
+  }
+
+  @media (max-width: 600px) {
+    body { font-size: 15px; }
+    .chapter-title { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="nav-inner">
+    <span class="book-title">The Architect's Blueprint</span>
+    <span class="batch-label">Chapters 1–5</span>
+    <div class="chapter-links">
+      <a href="#ch01">Ch 1</a>
+      <a href="#ch02">Ch 2</a>
+      <a href="#ch03">Ch 3</a>
+      <a href="#ch04">Ch 4</a>
+      <a href="#ch05">Ch 5</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+<!-- ═══════════════════════════════════════ CHAPTER 1 ═══ -->
+<section class="chapter" id="ch01">
+  <div class="part-label">Part 1: What Is a System?</div>
+  <h1 class="chapter-title">Chapter 1: The City Analogy</h1>
+
+  <h2>The Analogy</h2>
+  <p>Imagine standing at the top of a tall building, looking down at a city.</p>
+  <p>You can see roads. Cars move along them, carrying people and goods from one place to another. You can see buildings: offices, homes, factories, warehouses, each with a purpose. There are water pipes underground, invisible, quietly delivering water to every tap. There are electrical cables forming a power grid, keeping every light on. And there is a postal system: trucks collecting letters, sorting offices routing them, postmen delivering them to the right door.</p>
+  <p>Here is the central insight of this book: <strong>a software system is exactly like a city.</strong></p>
+  <p>Every piece of technology you have ever used, whether a website, an app, a game, or a smart speaker, is a city. It has roads, buildings, water pipes, a power grid, and a postal system. The names are different, but the underlying ideas are identical.</p>
+  <blockquote><p>Before you ever touch a computer, you already understand how systems work, because you live inside one every day.</p></blockquote>
+
+  <h2>The Concept</h2>
+  <p>A <strong>system</strong> is a collection of parts working together toward a shared goal. A city's goal is to let people live, work, and move efficiently. A software system's goal might be to let you send a message to a friend, or to allow an AI agent to find the right tool for a task.</p>
+  <p>Every system, regardless of complexity, can be broken down into the same five components:</p>
+
+  <table>
+    <thead>
+      <tr><th>City Component</th><th>Software Equivalent</th><th>What It Does</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Roads</td><td>Networks (the internet)</td><td>Moves information from one place to another</td></tr>
+      <tr><td>Buildings</td><td>Servers</td><td>Stores data and performs work</td></tr>
+      <tr><td>Post offices</td><td>APIs</td><td>Handles requests and sends responses</td></tr>
+      <tr><td>Filing cabinets</td><td>Databases</td><td>Remembers things permanently</td></tr>
+      <tr><td>Power grid</td><td>Cloud infrastructure</td><td>Keeps everything running</td></tr>
+    </tbody>
+  </table>
+
+  <p>These five components appear throughout every chapter in this book. Study them carefully, because every system you will ever build or analyse reduces to some combination of these five things.</p>
+
+  <h2>System Diagram</h2>
+  <pre class="diagram">┌─────────────────────────────────────────────────────────────┐
+│              THE FIVE COMPONENTS OF ANY SYSTEM              │
+├──────────────┬──────────────────────┬───────────────────────┤
+│  City        │  Software            │  Example              │
+├──────────────┼──────────────────────┼───────────────────────┤
+│  Roads       │  Network / Internet  │  Wi-Fi, fibre cable   │
+│  Buildings   │  Servers             │  A backend server     │
+│  Post Office │  API                 │  GET /v0/tools        │
+│  Filing Cab. │  Database            │  PostgreSQL           │
+│  Power Grid  │  Cloud Infra         │  A hosting provider   │
+└──────────────┴──────────────────────┴───────────────────────┘
+
+You (browser or AI agent)
+      │
+      │  travels the ROAD (the internet)
+      ▼
+   API (post office) ──── forwards request ────►  SERVER (building)
+                                                        │
+                                                 queries DATABASE
+                                                 (filing cabinet)</pre>
+
+  <h2>The Two Systems in This Book</h2>
+  <p>Throughout this book, we will study a system made up of two parts working together.</p>
+  <p>The first part is the <strong>Tool Registry</strong>: a backend server written in Go that maintains a searchable catalogue of AI tools. It stores information about each tool, who made it, and how to use it. Any AI agent can query the registry to discover what tools are available.</p>
+  <p>The second part is the <strong>AI assistant</strong>: a program written in Python and Rust that reads the registry, selects the right tools, and uses them to complete tasks on your behalf.</p>
+  <p>Here is how the two parts connect:</p>
+  <pre class="diagram">You (the human)
+    ↓
+AI Assistant (selects and uses tools)
+    ↓  queries: "what tools are available?"
+Tool Registry (maintains the catalogue)
+    ↓  returns a list of registered tools
+AI Assistant picks a tool and uses it
+    ↓
+The tool acts in the real world
+   (reads a file, queries a database, calls another service)</pre>
+  <p>This chain, from you through the AI assistant to the registry and out to the world, is the thread that runs through every chapter. By the end of this book, you will understand every component in it.</p>
+
+  <div class="lab">
+    <div class="lab-header">🔬 Lab Activity: Build a System Simulator</div>
+    <div class="lab-meta">Time: ~20 minutes &nbsp;|&nbsp; You will need: Python 3.10+ &nbsp;|&nbsp; Windows PowerShell</div>
+
+    <p><strong>What you will build:</strong> A Python script that simulates all five components of a system running on your computer. Each component logs its activity so you can watch data flow through the whole system from start to finish.</p>
+
+    <p><span class="step">1</span> <strong>Create the project folder.</strong></p>
+    <pre><code>mkdir C:\labs\ch01-systems
+cd C:\labs\ch01-systems</code></pre>
+    <p class="success">✅ No output is expected. The folder has been created.</p>
+
+    <p><span class="step">2</span> <strong>Create the file <code>system_sim.py</code>.</strong></p>
+    <pre><code>notepad system_sim.py</code></pre>
+    <p>Paste the following and save:</p>
+    <pre><code>"""
+system_sim.py
+Simulates the five components of a software system in a single script.
+Each component is a Python function that logs what it does.
+"""
+
+import json
+import time
+
+# ── COMPONENT 1: DATABASE (the filing cabinet) ────────────────
+DATABASE = {
+    "tools": [
+        {"id": "file-reader",  "name": "File Reader",  "version": "1.0"},
+        {"id": "web-search",   "name": "Web Search",   "version": "2.1"},
+        {"id": "calculator",   "name": "Calculator",   "version": "1.3"},
+    ]
+}
+
+def database_query(query_type, params=None):
+    """Retrieve records from the in-memory database."""
+    print(f"  [DATABASE]  Received query: {query_type}")
+    if query_type == "list_tools":
+        results = DATABASE["tools"]
+        print(f"  [DATABASE]  Returning {len(results)} records.")
+        return results
+    if query_type == "get_tool" and params:
+        match = [t for t in DATABASE["tools"] if t["id"] == params.get("id")]
+        return match[0] if match else None
+    return None
+
+
+# ── COMPONENT 2: SERVER (the building) ───────────────────────
+def server_handle(request):
+    """Process an incoming request and return a response."""
+    print(f"  [SERVER]    Processing request: {request['path']}")
+    if request["path"] == "/tools":
+        data = database_query("list_tools")
+        return {"status": 200, "body": {"tools": data, "total": len(data)}}
+    if request["path"].startswith("/tools/"):
+        tool_id = request["path"].split("/")[-1]
+        data = database_query("get_tool", {"id": tool_id})
+        if data:
+            return {"status": 200, "body": data}
+        return {"status": 404, "body": {"error": "Tool not found"}}
+    return {"status": 404, "body": {"error": "Unknown path"}}
+
+
+# ── COMPONENT 3: API (the post office) ───────────────────────
+def api_receive(method, path, body=None):
+    """
+    The API is the front door of the server.
+    It receives requests and passes them to the server.
+    """
+    print(f"  [API]       {method} {path}")
+    request = {"method": method, "path": path, "body": body}
+    response = server_handle(request)
+    print(f"  [API]       Responding with status {response['status']}")
+    return response
+
+
+# ── COMPONENT 4: NETWORK (the road) ──────────────────────────
+def network_send(destination, method, path, body=None):
+    """
+    The network carries requests from the client to the API.
+    In real life this is the internet. Here it is a function call.
+    """
+    print(f"  [NETWORK]   Sending {method} {path} to {destination}")
+    time.sleep(0.05)   # simulate a small network delay
+    response = api_receive(method, path, body)
+    print(f"  [NETWORK]   Response delivered back to client.")
+    return response
+
+
+# ── COMPONENT 5: CLIENT (you) ─────────────────────────────────
+def client_request(path):
+    """The client is the starting point: it initiates every request."""
+    print(f"\n[CLIENT]  Requesting: {path}")
+    response = network_send("tool-registry.local", "GET", path)
+    print(f"[CLIENT]  Received: {json.dumps(response['body'], indent=2)}")
+    return response
+
+
+# ── RUN THE SIMULATION ────────────────────────────────────────
+print("=" * 58)
+print("SYSTEM SIMULATION: Five Components in Action")
+print("=" * 58)
+
+print("\n--- Request 1: List all tools ---")
+client_request("/tools")
+
+print("\n--- Request 2: Get details for one tool ---")
+client_request("/tools/web-search")
+
+print("\n--- Request 3: Request something that does not exist ---")
+client_request("/tools/does-not-exist")
+
+print("\n" + "=" * 58)
+print("Every request above passed through all five components:")
+print("  CLIENT → NETWORK → API → SERVER → DATABASE → back")
+print("=" * 58)</code></pre>
+
+    <p><span class="step">3</span> <strong>Run the script.</strong></p>
+    <pre><code>python system_sim.py</code></pre>
+    <p class="success">✅ You should see output like this:</p>
+    <pre><code>==========================================================
+SYSTEM SIMULATION: Five Components in Action
+==========================================================
+
+--- Request 1: List all tools ---
+
+[CLIENT]  Requesting: /tools
+  [NETWORK]   Sending GET /tools to tool-registry.local
+  [API]       GET /tools
+  [SERVER]    Processing request: /tools
+  [DATABASE]  Received query: list_tools
+  [DATABASE]  Returning 3 records.
+  [API]       Responding with status 200
+  [NETWORK]   Response delivered back to client.
+[CLIENT]  Received: {
+  "tools": [
+    {"id": "file-reader", "name": "File Reader", "version": "1.0"},
+    {"id": "web-search",  "name": "Web Search",  "version": "2.1"},
+    {"id": "calculator",  "name": "Calculator",  "version": "1.3"}
+  ],
+  "total": 3
+}
+
+--- Request 2: Get details for one tool ---
+
+[CLIENT]  Requesting: /tools/web-search
+  [NETWORK]   Sending GET /tools/web-search to tool-registry.local
+  ...
+[CLIENT]  Received: {"id": "web-search", "name": "Web Search", "version": "2.1"}
+
+--- Request 3: Request something that does not exist ---
+
+[CLIENT]  Requesting: /tools/does-not-exist
+  ...
+[CLIENT]  Received: {"error": "Tool not found"}</code></pre>
+
+    <p><span class="step">4</span> <strong>Add a tool to the database and request it.</strong></p>
+    <p>Open <code>system_sim.py</code> again. In the <code>DATABASE</code> dictionary at the top, add a fourth entry:</p>
+    <pre><code>{"id": "my-tool", "name": "My First Tool", "version": "0.1"},</code></pre>
+    <p>Then add a line at the bottom of the script:</p>
+    <pre><code>client_request("/tools/my-tool")</code></pre>
+    <p>Run the script again. Your new tool now flows through all five components.</p>
+
+    <p><strong>What you just built:</strong> A working simulation of all five system components. Every real software system, from a chat application to a banking platform, follows exactly this pattern. The labels on the boxes change, but the flow never does.</p>
+  </div>
+
+  <div class="real-world">
+    <div class="real-world-header">🌍 Real World</div>
+    <p>WhatsApp handles over 100 billion messages per day using exactly these five components. The roads are undersea fibre-optic cables spanning continents. The buildings are data centres in multiple countries. The post office is an API layer handling billions of requests. The filing cabinets are distributed databases storing message history. The power grid is the company's private cloud infrastructure. The architecture you just simulated is the same architecture behind every application on your phone.</p>
+  </div>
+
+  <div class="takeaway">
+    <h2>The Takeaway</h2>
+    <p>Every software system is a city. Roads move data. Buildings store and process it. Post offices handle requests. Filing cabinets remember things. These five components appear at every scale, from a script on your laptop to a platform serving a billion users.</p>
+  </div>
+
+  <h2>The Connection</h2>
+  <p>Now that you can see software as a city, the next question is: who are the citizens? In Chapter 2, we meet the two most important roles in any system, the <strong>client</strong> (the one who asks) and the <strong>server</strong> (the one who answers). Once you understand this distinction, you will recognise it in every piece of software you ever encounter.</p>
+
+  <div class="chapter-nav">
+    <span></span>
+    <a href="#ch02">Chapter 2 &rarr;</a>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════ CHAPTER 2 ═══ -->
+<section class="chapter" id="ch02">
+  <div class="part-label">Part 1: What Is a System?</div>
+  <h1 class="chapter-title">Chapter 2: Clients and Servers</h1>
+
+  <h2>The Analogy</h2>
+  <p>You walk into a restaurant and sit down. A waiter hands you a menu. You decide what you want, tell the waiter, and wait. The waiter walks to the kitchen, passes your order to the chef, and returns with your meal.</p>
+  <p>Consider what happened in each step:</p>
+  <ul>
+    <li>You never entered the kitchen. You never saw the chef. You never touched the stove.</li>
+    <li>The waiter acted as the intermediary, receiving your request and delivering the result.</li>
+    <li>The kitchen performed the real work: storing ingredients, cooking the meal, and preparing the plate.</li>
+  </ul>
+  <p>This is precisely how the internet works, every single time.</p>
+  <ul>
+    <li>You are the <strong>client</strong>: the one who makes requests.</li>
+    <li>The waiter is the <strong>API</strong>: the agreed channel between you and the kitchen.</li>
+    <li>The kitchen is the <strong>server</strong>: the one who does the work and holds the data.</li>
+  </ul>
+
+  <h2>The Concept</h2>
+  <p>In any software system, every interaction involves two roles:</p>
+  <p><strong>The Client</strong> asks for things. Your phone is a client. Your web browser is a client. An AI assistant is a client when it requests tools from a registry. Clients do not store the primary data; they request it from servers.</p>
+  <p><strong>The Server</strong> answers requests and holds the data. A tool registry is a server. A video platform's computers are servers. Your school's grading system runs on a server. Servers wait silently until a client contacts them.</p>
+  <p>This relationship is called the <strong>client-server model</strong>, and it is the foundation of almost everything on the internet.</p>
+  <blockquote><p>The client and the server never need to be in the same room, or even the same country. They communicate over the internet using agreed-upon languages called protocols, which Chapter 3 explains.</p></blockquote>
+
+  <h3>One Server, Many Clients</h3>
+  <p>A server can respond to thousands of clients at the same time. Right now, millions of people are watching videos on a platform like YouTube. Every one of them has a client sending requests to the same servers. Those servers handle all the requests simultaneously, like a kitchen with fifty chefs each working on a different order.</p>
+
+  <h3>A Component Can Be Both</h3>
+  <p>A single piece of software can be a client and a server at the same time, depending on which direction you are looking. Consider the chain from Chapter 1:</p>
+  <pre class="diagram">You (client)
+    → AI Assistant
+        → Tool Registry (server)</pre>
+  <p>From your perspective, the AI assistant is the server; it responds to your instructions. From the AI assistant's perspective, the Tool Registry is the server; the assistant sends queries to it. The AI assistant is simultaneously a server to you and a client to the registry.</p>
+  <p>This is not contradictory. It is simply a sign that real systems have layers. Each layer is a client to everything above it and a server to everything below.</p>
+
+  <h2>System Diagram</h2>
+  <pre class="diagram">                   CLIENT-SERVER MODEL
+
+┌──────────────┐          request          ┌──────────────┐
+│              │ ────────────────────────► │              │
+│   CLIENT     │   GET /tools              │    SERVER    │
+│              │   (asking for a list)     │              │
+│ (AI Agent /  │                           │ (Tool        │
+│  Browser /   │ ◄──────────────────────── │  Registry /  │
+│  Your Code)  │   200 OK {"tools":[...]}  │  Database)   │
+└──────────────┘          response         └──────────────┘
+
+CLIENT rules:             SERVER rules:
+  Initiates requests        Waits silently for requests
+  Does not store data       Responds when asked
+  Can also be a server      Handles many clients at once
+    to layers below it</pre>
+
+  <h2>The Real Code</h2>
+  <p>The following is a simplified version of what a server's startup code looks like in Go. When this code runs, the server opens for business and begins accepting requests from clients.</p>
+  <pre><code>// tool-registry/cmd/server/main.go
+// This is the entry point: the moment the server opens for business.
+func main() {
+    // Load configuration (which port to listen on, which database to use)
+    cfg := config.Load()
+
+    // Connect to the database (where all tool records are stored)
+    db := database.Connect(cfg.DatabaseURL)
+
+    // Begin accepting requests from clients
+    server := api.NewServer(cfg, db)
+    server.Start(cfg.Port)
+}</code></pre>
+  <p>Each line corresponds to a step in opening the restaurant:</p>
+  <ol>
+    <li>Read the configuration: what address to listen on, what database to use.</li>
+    <li>Connect to the database: where all tool records are stored.</li>
+    <li>Start accepting requests from clients.</li>
+  </ol>
+  <p>Once this code runs, any client, including an AI assistant, can send requests to this server.</p>
+
+  <div class="lab">
+    <div class="lab-header">🔬 Lab Activity: A Local Client-Server Conversation</div>
+    <div class="lab-meta">Time: ~20 minutes &nbsp;|&nbsp; You will need: Python 3.10+ &nbsp;|&nbsp; Two PowerShell windows</div>
+
+    <p><strong>What you will build:</strong> A local server and a separate client script. The server waits for requests. The client sends requests and displays the responses. You will run both on your own computer so you can observe the full conversation.</p>
+
+    <p><span class="step">1</span> <strong>Create the project folder.</strong></p>
+    <pre><code>mkdir C:\labs\ch02-client-server
+cd C:\labs\ch02-client-server</code></pre>
+
+    <p><span class="step">2</span> <strong>Create the server: <code>server.py</code>.</strong></p>
+    <pre><code>notepad server.py</code></pre>
+    <pre><code>"""
+server.py  -  A minimal HTTP server representing the Tool Registry.
+Run this in one PowerShell window, then use client.py in a second window.
+"""
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import json
+
+TOOLS = [
+    {"id": "file-reader",  "name": "File Reader",  "description": "Reads files from disk"},
+    {"id": "web-search",   "name": "Web Search",   "description": "Searches the internet"},
+    {"id": "calculator",   "name": "Calculator",   "description": "Evaluates expressions"},
+]
+
+class RegistryHandler(BaseHTTPRequestHandler):
+    def log_message(self, format, *args):
+        print(f"  [SERVER] {format % args}")
+
+    def send_json(self, status, data):
+        body = json.dumps(data, indent=2).encode()
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", len(body))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def do_GET(self):
+        if self.path == "/tools":
+            self.send_json(200, {"tools": TOOLS, "total": len(TOOLS)})
+        elif self.path.startswith("/tools/"):
+            tool_id = self.path.split("/")[-1]
+            match = next((t for t in TOOLS if t["id"] == tool_id), None)
+            if match:
+                self.send_json(200, match)
+            else:
+                self.send_json(404, {"error": f"No tool with id '{tool_id}'"})
+        elif self.path == "/healthz":
+            self.send_json(200, {"status": "ok"})
+        else:
+            self.send_json(404, {"error": "Path not found"})
+
+print("Tool Registry server running at http://localhost:8800")
+print("Waiting for client requests. Press Ctrl+C to stop.\n")
+HTTPServer(("localhost", 8800), RegistryHandler).serve_forever()</code></pre>
+
+    <p><span class="step">3</span> <strong>Start the server in Window 1.</strong></p>
+    <pre><code>python server.py</code></pre>
+    <p class="success">✅ The server is now waiting. Leave this window open for the rest of the lab.</p>
+
+    <p><span class="step">4</span> <strong>Create the client: <code>client.py</code>.</strong></p>
+    <p>Open a second PowerShell window and navigate to the same folder:</p>
+    <pre><code>cd C:\labs\ch02-client-server
+notepad client.py</code></pre>
+    <pre><code>"""
+client.py  -  Demonstrates the client side of the client-server model.
+The server (server.py) must be running in another window first.
+"""
+import urllib.request
+import json
+
+BASE = "http://localhost:8800"
+
+def request(path):
+    """Send a GET request to the local server and return the parsed response."""
+    url = f"{BASE}{path}"
+    try:
+        with urllib.request.urlopen(url, timeout=5) as resp:
+            return resp.status, json.loads(resp.read())
+    except urllib.error.HTTPError as e:
+        return e.code, {"error": str(e.reason)}
+
+print("=" * 50)
+print("Client-Server Conversation")
+print("=" * 50)
+
+print("\n--- Is the server alive? ---")
+status, body = request("/healthz")
+print(f"Client sends:   GET /healthz")
+print(f"Server replies: {status} OK  →  {body}")
+
+print("\n--- List all available tools ---")
+status, body = request("/tools")
+print(f"Client sends:   GET /tools")
+print(f"Server replies: {status} OK  →  {body['total']} tools found")
+for tool in body["tools"]:
+    print(f"   {tool['id']:15}  {tool['name']}")
+
+print("\n--- Request one specific tool ---")
+status, body = request("/tools/calculator")
+print(f"Client sends:   GET /tools/calculator")
+print(f"Server replies: {status}  →  {body}")
+
+print("\n--- Request a tool that does not exist ---")
+status, body = request("/tools/unknown-tool")
+print(f"Client sends:   GET /tools/unknown-tool")
+print(f"Server replies: {status}  →  {body}")
+
+print("\n" + "=" * 50)
+print("Key observation: the server sent nothing until asked.")
+print("Every response above was triggered by a client request.")
+print("=" * 50)</code></pre>
+
+    <p><span class="step">5</span> <strong>Run the client in Window 2.</strong></p>
+    <pre><code>python client.py</code></pre>
+    <p class="success">✅ You should see this output in Window 2:</p>
+    <pre><code>==================================================
+Client-Server Conversation
+==================================================
+
+--- Is the server alive? ---
+Client sends:   GET /healthz
+Server replies: 200 OK  →  {"status": "ok"}
+
+--- List all available tools ---
+Client sends:   GET /tools
+Server replies: 200 OK  →  3 tools found
+   file-reader     File Reader
+   web-search      Web Search
+   calculator      Calculator
+
+--- Request one specific tool ---
+Client sends:   GET /tools/calculator
+Server replies: 200  →  {"id": "calculator", "name": "Calculator", ...}
+
+--- Request a tool that does not exist ---
+Client sends:   GET /tools/unknown-tool
+Server replies: 404  →  {"error": "No tool with id 'unknown-tool'"}</code></pre>
+    <p>In Window 1 (the server), you will also see each incoming request logged as it arrives.</p>
+    <p>Stop the server with <strong>Ctrl+C</strong> when you are finished.</p>
+
+    <p><strong>What you just built:</strong> A working client-server pair. The server waited silently until the client spoke. The client received exactly what the server chose to share, nothing more. This is the client-server contract in action.</p>
+  </div>
+
+  <div class="real-world">
+    <div class="real-world-header">🌍 Real World</div>
+    <p>YouTube serves over one billion hours of video watched per day. Every play button click is a client request. YouTube's servers never push video to you uninvited; they wait. When you press play, your browser sends a request to YouTube's servers, which respond with the video stream. The server initiates nothing. This reactive model, responding only when asked, is precisely why the internet scales to billions of simultaneous users without collapsing under its own weight.</p>
+  </div>
+
+  <div class="takeaway">
+    <h2>The Takeaway</h2>
+    <p>Every interaction on the internet is a conversation between a client, the one who asks, and a server, the one who answers. The client never sees inside the server's kitchen; it sees only the responses. Once you recognise this pattern, you will find it in every piece of software you use.</p>
+  </div>
+
+  <h2>The Connection</h2>
+  <p>You now know who is talking. The next question is how they talk. Two people who share no common language cannot communicate regardless of their proximity. Machines face exactly the same challenge. In Chapter 3, we study <strong>protocols</strong>, the agreed-upon languages that allow machines to understand one another.</p>
+
+  <div class="chapter-nav">
+    <a href="#ch01">&larr; Chapter 1</a>
+    <a href="#ch03">Chapter 3 &rarr;</a>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════ CHAPTER 3 ═══ -->
+<section class="chapter" id="ch03">
+  <div class="part-label">Part 1: What Is a System?</div>
+  <h1 class="chapter-title">Chapter 3: Protocols: The Language of Machines</h1>
+
+  <h2>The Analogy</h2>
+  <p>Imagine two people trying to build a house together, one speaking only Japanese, the other speaking only Portuguese. They stand in front of a pile of bricks and tools and nothing happens. Neither can understand the other's instructions.</p>
+  <p>They make a decision: both will learn to communicate in English. Not because English is the best language, but because both have agreed to use it. Now when one says "hand me the hammer," the other understands. Work begins.</p>
+  <p>That agreement, "we will use English," is a <strong>protocol</strong>. A protocol is not about what to say; it is about how to say it so that both sides can understand.</p>
+  <p>Machines face exactly this problem. A phone in your pocket, a server in Iceland, and a thermostat on your wall are built by different companies using different hardware running different software. They need an agreed-upon language to communicate. That language is a protocol.</p>
+
+  <h2>The Concept</h2>
+  <p>A <strong>protocol</strong> is a set of rules that two systems agree to follow when communicating. Protocols define three things:</p>
+  <ul>
+    <li><strong>The format messages must take</strong> (comparable to agreeing to write letters rather than speak aloud)</li>
+    <li><strong>The order in which things happen</strong> (comparable to agreeing that you introduce yourself before conducting business)</li>
+    <li><strong>How to handle errors</strong> (comparable to agreeing on what "I did not understand" looks like)</li>
+  </ul>
+
+  <h3>The Protocols That Power the Web</h3>
+  <p><strong>HTTP (HyperText Transfer Protocol)</strong> is the language of the web. When you type a web address into a browser, your browser sends an HTTP request to a server. The server sends back an HTTP response. Every webpage you have ever loaded was delivered using HTTP.</p>
+  <p><strong>JSON (JavaScript Object Notation)</strong> is not a protocol but a <em>format</em>, a structured way of representing data so that any machine can read it:</p>
+  <pre><code>{
+  "name": "File Reader",
+  "version": "1.2.0",
+  "description": "Reads files from your computer"
+}</code></pre>
+  <p>JSON is human-readable and machine-readable simultaneously. You can look at it and understand it without any special software.</p>
+  <p><strong>MCP (Model Context Protocol)</strong> is the central protocol in this book. MCP was designed specifically to allow AI agents to communicate with tools. It defines how an agent announces that it wants to use a tool, how the tool responds, and how errors are reported. Without MCP, every AI agent would need to learn a different language for each tool it wanted to use. With MCP, one protocol works for all tools.</p>
+
+  <h2>System Diagram</h2>
+  <pre class="diagram">PROTOCOL = A shared agreement on message format
+
+WITHOUT a protocol:
+  Client: "Hello give me the tools"     Server: ???  (does not understand)
+  Client: "Tools please list them all"  Server: ???  (still confused)
+  RESULT: nothing works
+
+WITH HTTP + JSON:
+  Client: GET /tools HTTP/1.1           Server: 200 OK
+          Accept: application/json             {"tools": [...]}
+  RESULT: both sides understand, every time
+
+Protocol stack used in this book:
+  ┌──────────────────────────────────┐
+  │  MCP Protocol                   │  ← AI agents use this to call tools
+  ├──────────────────────────────────┤
+  │  HTTP / HTTPS                   │  ← How requests travel
+  ├──────────────────────────────────┤
+  │  JSON                           │  ← How data is formatted
+  ├──────────────────────────────────┤
+  │  TCP/IP                         │  ← How packets are delivered reliably
+  └──────────────────────────────────┘
+
+Each layer depends on the one below it.
+TCP/IP carries the bytes. JSON structures them.
+HTTP defines the request/response format. MCP defines the tool conversation.</pre>
+
+  <h2>The Real Code</h2>
+  <p>The Tool Registry stores information about tools in a format defined by a JSON schema. A schema is a set of rules that specifies exactly what a valid tool entry must look like. The following is a simplified version:</p>
+  <pre><code>// tool-registry/internal/validators/schemas/v1.json
+{
+  "required": ["name", "description", "packages"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Human-readable name of the tool"
+    },
+    "description": {
+      "type": "string",
+      "description": "What this tool does"
+    },
+    "packages": {
+      "type": "array",
+      "description": "How to install this tool (npm, pip, docker, etc.)"
+    }
+  }
+}</code></pre>
+  <p>This schema is a contract. If you try to register a tool without a <code>name</code>, the registry rejects it because you have broken the protocol. You have attempted to communicate in a way the other side cannot understand.</p>
+
+  <div class="lab">
+    <div class="lab-header">🔬 Lab Activity: Write and Validate a Tool Manifest</div>
+    <div class="lab-meta">Time: ~20 minutes &nbsp;|&nbsp; You will need: Python 3.10+ &nbsp;|&nbsp; Windows PowerShell</div>
+
+    <p><strong>What you will build:</strong> A tool manifest file in JSON format, and a Python validator that checks whether your manifest follows the protocol rules. You will also deliberately break the rules to see how the validator responds.</p>
+
+    <p><span class="step">1</span> <strong>Create the project folder.</strong></p>
+    <pre><code>mkdir C:\labs\ch03-protocols
+cd C:\labs\ch03-protocols</code></pre>
+
+    <p><span class="step">2</span> <strong>Create the file <code>tool_manifest.json</code>.</strong></p>
+    <p>This file represents a tool entry in the Tool Registry. It follows the protocol format.</p>
+    <pre><code>notepad tool_manifest.json</code></pre>
+    <pre><code>{
+  "name": "io.example.yourname/study-timer",
+  "description": "A Pomodoro study timer. Start, pause, and track focus sessions.",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/yourname/study-timer",
+    "type": "github"
+  },
+  "packages": [
+    {
+      "registry": "npm",
+      "name": "@yourname/study-timer",
+      "version": "0.1.0"
+    }
+  ]
+}</code></pre>
+    <p>Save the file. Replace <code>yourname</code> with your own name or a made-up identifier.</p>
+
+    <p><span class="step">3</span> <strong>Create the validator: <code>validate.py</code>.</strong></p>
+    <pre><code>notepad validate.py</code></pre>
+    <pre><code>"""
+validate.py
+Checks whether a tool manifest follows the protocol rules.
+This is the same kind of validation the Tool Registry performs
+on every submission before accepting it.
+"""
+import json
+import re
+
+def validate(path):
+    print(f"Validating: {path}\n")
+    errors = []
+
+    with open(path) as f:
+        data = json.load(f)
+
+    # Rule 1: Required fields must be present
+    required_fields = ["name", "description", "version", "packages"]
+    for field in required_fields:
+        if field not in data:
+            errors.append(f"Missing required field: '{field}'")
+        else:
+            print(f"  PASS  '{field}' is present")
+
+    # Rule 2: Name must follow the format namespace/tool-name
+    name = data.get("name", "")
+    pattern = re.compile(r'^[a-zA-Z0-9][a-zA-Z0-9._-]*/[a-zA-Z0-9][a-zA-Z0-9._-]*$')
+    if not pattern.match(name):
+        errors.append(f"Invalid name format: '{name}': use 'namespace/tool-name'")
+    else:
+        print(f"  PASS  name format is valid: '{name}'")
+
+    # Rule 3: Version must be an exact number, not a range
+    version = data.get("version", "")
+    if re.match(r'^[\^~>=<]', version):
+        errors.append(f"Invalid version: '{version}': must be exact, e.g. '1.2.3'")
+    elif not re.match(r'^\d+\.\d+\.\d+', version):
+        errors.append(f"Invalid version: '{version}': must follow semver, e.g. '0.1.0'")
+    else:
+        print(f"  PASS  version is valid: '{version}'")
+
+    # Rule 4: Packages must be a non-empty list
+    packages = data.get("packages", [])
+    if not isinstance(packages, list) or len(packages) == 0:
+        errors.append("Invalid packages: must be a non-empty list")
+    else:
+        print(f"  PASS  packages: {len(packages)} package(s) defined")
+
+    # Rule 5: Description must be meaningful (at least 20 characters)
+    desc = data.get("description", "")
+    if len(desc) &lt; 20:
+        errors.append(f"Description too short ({len(desc)} chars): write at least 20 characters")
+    else:
+        print(f"  PASS  description is present and descriptive")
+
+    print()
+    if errors:
+        print(f"VALIDATION FAILED: {len(errors)} error(s) found:")
+        for e in errors:
+            print(f"  FAIL  {e}")
+    else:
+        print("VALIDATION PASSED: manifest is ready to submit.")
+    return len(errors) == 0
+
+validate("tool_manifest.json")</code></pre>
+
+    <p><span class="step">4</span> <strong>Run the validator.</strong></p>
+    <pre><code>python validate.py</code></pre>
+    <p class="success">✅ If your manifest is correct, you will see:</p>
+    <pre><code>Validating: tool_manifest.json
+
+  PASS  'name' is present
+  PASS  'description' is present
+  PASS  'version' is present
+  PASS  'packages' is present
+  PASS  name format is valid: 'io.example.yourname/study-timer'
+  PASS  version is valid: '0.1.0'
+  PASS  packages: 1 package(s) defined
+  PASS  description is present and descriptive
+
+VALIDATION PASSED: manifest is ready to submit.</code></pre>
+
+    <p><span class="step">5</span> <strong>Break the protocol deliberately.</strong></p>
+    <p>Open <code>tool_manifest.json</code> and change the version from <code>"0.1.0"</code> to <code>"^1.0.0"</code>. Save it and run the validator again:</p>
+    <pre><code>python validate.py</code></pre>
+    <p class="success">✅ You should see:</p>
+    <pre><code>VALIDATION FAILED: 1 error(s) found:
+  FAIL  Invalid version: '^1.0.0': must be exact, e.g. '1.2.3'</code></pre>
+    <p>Change the version back to <code>"0.1.0"</code> before moving on.</p>
+
+    <p><span class="step">6</span> <strong>Try a second deliberate failure: remove a required field.</strong></p>
+    <p>Delete the <code>"description"</code> line from <code>tool_manifest.json</code>. Run the validator again and observe which rule fails. Then restore the file.</p>
+
+    <p><strong>What you just built:</strong> A real tool manifest document and a validator that enforces protocol rules. The Tool Registry applies the same logic to every manifest it receives, rejecting anything that does not comply.</p>
+  </div>
+
+  <div class="real-world">
+    <div class="real-world-header">🌍 Real World</div>
+    <p>The npm registry (npmjs.com), which hosts over two million JavaScript packages, enforces a nearly identical manifest format through a file called <code>package.json</code>. Every npm package must declare its name, version, and dependencies in that file before the registry will accept it. When Anthropic updated the MCP protocol format, they published a new schema file with a new date in its name. Older submissions validated against the old schema still work, but new submissions must comply with the updated rules. This is versioned protocol evolution, the same approach every major internet standard uses.</p>
+  </div>
+
+  <div class="takeaway">
+    <h2>The Takeaway</h2>
+    <p>A protocol is a shared agreement about how to communicate. Without protocols, machines cannot understand each other regardless of how close they are. With protocols, a device in your pocket can reliably exchange information with a server on the other side of the planet.</p>
+  </div>
+
+  <h2>The Connection</h2>
+  <p>You now know what protocols are and why they exist. A protocol without a door to enter, however, is of limited use. In Chapter 4, we study the <strong>API</strong>, the front door of every server, the specific point through which all requests arrive and all responses leave.</p>
+
+  <div class="chapter-nav">
+    <a href="#ch02">&larr; Chapter 2</a>
+    <a href="#ch04">Chapter 4 &rarr;</a>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════ CHAPTER 4 ═══ -->
+<section class="chapter" id="ch04">
+  <div class="part-label">Part 1: What Is a System?</div>
+  <h1 class="chapter-title">Chapter 4: APIs: The Front Door</h1>
+
+  <h2>The Analogy</h2>
+  <p>You want to order a pizza. You do not walk into the kitchen and instruct the chef. You do not open the refrigerator yourself and assemble the ingredients. You call a phone number or tap a button in an app.</p>
+  <p>That phone number, that single point of contact, is the <strong>API</strong>.</p>
+  <p>An API (Application Programming Interface) is the front door of a server. It is the only place where the outside world is permitted to make contact. Everything behind the door, the database, the business logic, the internal processing, remains hidden. Callers interact with the front door only.</p>
+  <p>The front door operates by specific rules: you must ring the bell in the correct way, the door opens only for recognised requests, and it responds in a predictable manner. This predictability is what makes APIs powerful. The server decides exactly what the outside world can request and exactly how it will respond.</p>
+
+  <h2>The Concept</h2>
+  <p>An API is a defined set of <strong>endpoints</strong>, specific addresses you can send requests to, along with the rules governing those requests.</p>
+  <p>Think of endpoints as rooms in a building:</p>
+  <ul>
+    <li>Room <code>/tools</code>: "Show me all registered tools."</li>
+    <li>Room <code>/tools/file-reader</code>: "Show me details about the File Reader tool."</li>
+    <li>Room <code>/publish</code>: "I want to register a new tool."</li>
+  </ul>
+  <p>Each room has its own access policy. Some rooms are open to anyone. Others require identification. Some rooms allow you to look but not modify anything. Others allow you to leave data behind.</p>
+
+  <h3>HTTP Methods: Four Types of Request</h3>
+  <table>
+    <thead>
+      <tr><th>Method</th><th>Meaning</th><th>Restaurant equivalent</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>GET</code></td><td>Retrieve something</td><td>"What is on the menu?"</td></tr>
+      <tr><td><code>POST</code></td><td>Create something new</td><td>"I would like to place an order."</td></tr>
+      <tr><td><code>PUT / PATCH</code></td><td>Update something existing</td><td>"Change my order to extra-large."</td></tr>
+      <tr><td><code>DELETE</code></td><td>Remove something</td><td>"Cancel my order."</td></tr>
+    </tbody>
+  </table>
+
+  <h2>System Diagram</h2>
+  <pre class="diagram">API = The front door. The only way in. The interior remains hidden.
+
+OUTSIDE (public callers)          INSIDE (hidden from callers)
+          │                                    │
+          │   GET /tools                       │  Database queries
+          │ ────────────────────────────►      │  Business logic
+          │   200 OK { "tools": [...] }        │  Other services
+          │ ◄────────────────────────────      │  Internal state
+          │                                    │
+          │   POST /publish                    │  Input validation
+          │ ────────────────────────────►      │  Identity check
+          │   + identity token + manifest      │  Database write
+          │   201 Created / 400 Bad Request    │
+          │ ◄────────────────────────────      │
+
+HTTP Methods at a glance:
+  GET    → Read (safe, repeatable, changes nothing)
+  POST   → Create something new
+  PUT    → Replace an existing record entirely
+  PATCH  → Update part of an existing record
+  DELETE → Remove a record</pre>
+
+  <h2>The Real Code</h2>
+  <p>The following shows how the Tool Registry defines its API endpoints in Go. Each line opens one door and assigns a handler function to answer it.</p>
+  <pre><code>// tool-registry/internal/api/router.go
+// Each line is one endpoint: a method, a path, and the function that answers it.
+
+r.GET("/tools",            handlers.ListTools)      // List all tools
+r.GET("/tools/:id",        handlers.GetTool)        // Get one specific tool
+r.POST("/tools/publish",   handlers.PublishTool)    // Register a new tool
+r.GET("/healthz",          handlers.HealthCheck)    // Confirm the server is alive</code></pre>
+  <p>The <code>:id</code> in <code>/tools/:id</code> is a variable placeholder, like a hotel room number. A request to <code>/tools/file-reader</code> and a request to <code>/tools/calculator</code> both use the same door, but they return a different record depending on the value provided.</p>
+
+  <h3>An Example Request and Response</h3>
+  <p>When an AI assistant queries the Tool Registry for available tools, it sends:</p>
+  <pre><code>GET /tools HTTP/1.1
+Host: tool-registry.local
+Accept: application/json</code></pre>
+  <p>The registry responds with:</p>
+  <pre><code>{
+  "tools": [
+    {
+      "id": "file-reader",
+      "name": "File Reader",
+      "description": "Reads files from your computer",
+      "version": "1.2.0"
+    },
+    {
+      "id": "web-search",
+      "name": "Web Search",
+      "description": "Searches the internet",
+      "version": "2.0.1"
+    }
+  ],
+  "total": 2
+}</code></pre>
+  <p>The assistant reads this response, selects the appropriate tool, and uses it. The entire exchange happened through the front door. The assistant never touched the registry's database directly.</p>
+
+  <div class="lab">
+    <div class="lab-header">🔬 Lab Activity: Build and Explore Your Own API</div>
+    <div class="lab-meta">Time: ~25 minutes &nbsp;|&nbsp; You will need: Python 3.10+ &nbsp;|&nbsp; Two PowerShell windows</div>
+
+    <p><strong>What you will build:</strong> A Python HTTP server with four API endpoints representing a home lighting system. You will then call those endpoints from a second terminal to observe how an API controls what callers can and cannot do.</p>
+
+    <p><span class="step">1</span> <strong>Create the project folder.</strong></p>
+    <pre><code>mkdir C:\labs\ch04-apis
+cd C:\labs\ch04-apis</code></pre>
+
+    <p><span class="step">2</span> <strong>Create the API server: <code>home_api.py</code>.</strong></p>
+    <pre><code>notepad home_api.py</code></pre>
+    <pre><code>"""
+home_api.py  -  A Home Lighting API with four endpoints.
+Demonstrates how an API controls access to the system behind it.
+"""
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import json
+import urllib.parse
+
+# This is the "database": the state of every light in the house
+LIGHTS = {
+    "living-room": {"status": "off", "brightness": 0},
+    "bedroom":     {"status": "off", "brightness": 0},
+    "kitchen":     {"status": "on",  "brightness": 80},
+}
+
+class HomeAPIHandler(BaseHTTPRequestHandler):
+    def log_message(self, format, *args):
+        print(f"  [API] {format % args}")
+
+    def send_json(self, status, data):
+        body = json.dumps(data, indent=2).encode()
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", len(body))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def do_GET(self):
+        path = urllib.parse.urlparse(self.path).path
+
+        # Endpoint 1: GET /lights (list all lights)
+        if path == "/lights":
+            self.send_json(200, {"lights": LIGHTS})
+
+        # Endpoint 2: GET /lights/:room (get one light)
+        elif path.startswith("/lights/"):
+            room = path.split("/")[-1]
+            if room in LIGHTS:
+                self.send_json(200, {room: LIGHTS[room]})
+            else:
+                self.send_json(404, {"error": f"No room named '{room}'"})
+
+        else:
+            self.send_json(404, {"error": f"No endpoint at '{path}'"})
+
+    def do_POST(self):
+        path = urllib.parse.urlparse(self.path).path
+
+        # Endpoint 3: POST /lights/:room/on (turn a light on)
+        if path.startswith("/lights/") and path.endswith("/on"):
+            room = path.split("/")[2]
+            if room in LIGHTS:
+                LIGHTS[room]["status"] = "on"
+                LIGHTS[room]["brightness"] = 100
+                self.send_json(200, {
+                    "message": f"{room} light is now on",
+                    "light": LIGHTS[room]
+                })
+            else:
+                self.send_json(404, {"error": f"No room named '{room}'"})
+
+        # Endpoint 4: POST /lights/:room/off (turn a light off)
+        elif path.startswith("/lights/") and path.endswith("/off"):
+            room = path.split("/")[2]
+            if room in LIGHTS:
+                LIGHTS[room]["status"] = "off"
+                LIGHTS[room]["brightness"] = 0
+                self.send_json(200, {
+                    "message": f"{room} light is now off",
+                    "light": LIGHTS[room]
+                })
+            else:
+                self.send_json(404, {"error": f"No room named '{room}'"})
+
+        else:
+            self.send_json(404, {"error": f"No endpoint at '{path}'"})
+
+print("Home Lighting API running at http://localhost:8765")
+print()
+print("Available endpoints:")
+print("  GET  /lights            list all lights")
+print("  GET  /lights/:room      get one light")
+print("  POST /lights/:room/on   turn a light on")
+print("  POST /lights/:room/off  turn a light off")
+print()
+print("Press Ctrl+C to stop.\n")
+HTTPServer(("localhost", 8765), HomeAPIHandler).serve_forever()</code></pre>
+
+    <p><span class="step">3</span> <strong>Start the API in Window 1.</strong></p>
+    <pre><code>python home_api.py</code></pre>
+    <p class="success">✅ Leave this running.</p>
+
+    <p><span class="step">4</span> <strong>Create the API client: <code>explore_api.py</code>.</strong></p>
+    <p>In a second PowerShell window:</p>
+    <pre><code>cd C:\labs\ch04-apis
+notepad explore_api.py</code></pre>
+    <pre><code>"""
+explore_api.py  -  Calls each endpoint of the Home Lighting API.
+Run home_api.py in another window first.
+"""
+import urllib.request
+import json
+
+BASE = "http://localhost:8765"
+
+def get(path):
+    with urllib.request.urlopen(f"{BASE}{path}", timeout=5) as r:
+        return r.status, json.loads(r.read())
+
+def post(path):
+    req = urllib.request.Request(
+        f"{BASE}{path}", data=b"", method="POST"
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=5) as r:
+            return r.status, json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        return e.code, {"error": str(e.reason)}
+
+print("=" * 52)
+print("Exploring the Home Lighting API")
+print("=" * 52)
+
+print("\n--- GET /lights: see all lights ---")
+status, body = get("/lights")
+print(f"Status: {status}")
+for room, state in body["lights"].items():
+    print(f"  {room:15} status={state['status']:4}  brightness={state['brightness']}")
+
+print("\n--- GET /lights/kitchen: one specific room ---")
+status, body = get("/lights/kitchen")
+print(f"Status: {status}  →  {body}")
+
+print("\n--- GET /lights/garage: a room that does not exist ---")
+try:
+    status, body = get("/lights/garage")
+except urllib.error.HTTPError as e:
+    print(f"Status: {e.code}  →  Not Found (correct: the API protects non-existent rooms)")
+
+print("\n--- POST /lights/bedroom/on: turn the bedroom light on ---")
+status, body = post("/lights/bedroom/on")
+print(f"Status: {status}  →  {body['message']}")
+
+print("\n--- GET /lights/bedroom: confirm the change ---")
+status, body = get("/lights/bedroom")
+print(f"Status: {status}  →  {body}")
+
+print("\n--- POST /lights/bedroom/off: turn it back off ---")
+status, body = post("/lights/bedroom/off")
+print(f"Status: {status}  →  {body['message']}")
+
+print("\n" + "=" * 52)
+print("The API controlled everything. You never touched the")
+print("LIGHTS dictionary directly. The front door decided")
+print("what you were allowed to see and change.")
+print("=" * 52)</code></pre>
+
+    <p><span class="step">5</span> <strong>Run the client in Window 2.</strong></p>
+    <pre><code>python explore_api.py</code></pre>
+    <p class="success">✅ Expected output:</p>
+    <pre><code>====================================================
+Exploring the Home Lighting API
+====================================================
+
+--- GET /lights: see all lights ---
+Status: 200
+  living-room     status=off   brightness=0
+  bedroom         status=off   brightness=0
+  kitchen         status=on    brightness=80
+
+--- GET /lights/kitchen: one specific room ---
+Status: 200  →  {"kitchen": {"status": "on", "brightness": 80}}
+
+--- GET /lights/garage: a room that does not exist ---
+Status: 404  →  Not Found
+
+--- POST /lights/bedroom/on: turn the bedroom light on ---
+Status: 200  →  bedroom light is now on
+
+--- GET /lights/bedroom: confirm the change ---
+Status: 200  →  {"bedroom": {"status": "on", "brightness": 100}}
+
+--- POST /lights/bedroom/off: turn it back off ---
+Status: 200  →  bedroom light is now off</code></pre>
+
+    <p>Stop the server with <strong>Ctrl+C</strong> in Window 1.</p>
+    <p><strong>What you just built:</strong> A four-endpoint API server and a client that explores each one. The API enforced exactly what callers could and could not do. The caller never accessed the <code>LIGHTS</code> dictionary directly; it only went through the front door.</p>
+  </div>
+
+  <div class="real-world">
+    <div class="real-world-header">🌍 Real World</div>
+    <p>Stripe, the payment processing company, handles over one trillion dollars in payments per year entirely through an API. Every payment made through an online store is a single POST request to Stripe's API. Stripe's API design has remained almost unchanged for fifteen years, meaning applications built against it in 2010 still work today. That stability is deliberate: thousands of companies depend on the API contract, and breaking it would break every one of their products. A well-designed API is a promise you commit to keeping indefinitely.</p>
+  </div>
+
+  <div class="takeaway">
+    <h2>The Takeaway</h2>
+    <p>An API is the front door of a server, the only point through which the outside world may communicate with what is inside. It defines what can be requested, how to request it, and what the response will look like. Every application you use is in constant conversation with one or more APIs, even when that conversation is invisible to you.</p>
+  </div>
+
+  <h2>The Connection</h2>
+  <p>You now understand the skeleton of any software system: networks carry data, servers process it, APIs provide controlled access, and databases store it. In Part 2, we examine a real backend system in detail, tracing every architectural decision through the concepts you have just learned. Chapter 5 begins at the beginning: what is a registry, and why does it exist?</p>
+
+  <div class="chapter-nav">
+    <a href="#ch03">&larr; Chapter 3</a>
+    <a href="#ch05">Chapter 5 &rarr;</a>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════ CHAPTER 5 ═══ -->
+<section class="chapter" id="ch05">
+  <div class="part-label">Part 2: The Tool Registry: A Real Backend Explained</div>
+  <h1 class="chapter-title">Chapter 5: What Is a Registry?</h1>
+
+  <h2>The Analogy</h2>
+  <p>In the early days of smartphone apps, before app stores existed, installing software on a phone was chaotic. You had to find the developer's website, download a file of uncertain origin, hope it was safe, figure out how to install it, and then discover, after all that effort, that it did not work on your device.</p>
+  <p>Then centralised app stores appeared. Suddenly, one place held everything: every available application, reviews indicating quality, a safety review process, one-tap installation, and automatic updates.</p>
+  <p>An app store is a <strong>registry</strong>: a centralised, organised, trusted catalogue of things. The Tool Registry is the same concept applied to AI tools.</p>
+
+  <h2>The Concept</h2>
+  <p>A <strong>registry</strong> is an organised, searchable catalogue of items that others can discover and use. You already interact with several registries without thinking of them as such:</p>
+
+  <table>
+    <thead>
+      <tr><th>Registry</th><th>What it catalogues</th><th>Who uses it</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>App Store / Google Play</td><td>Mobile applications</td><td>Phone users</td></tr>
+      <tr><td>npm (npmjs.com)</td><td>JavaScript packages</td><td>Web developers</td></tr>
+      <tr><td>PyPI (pypi.org)</td><td>Python packages</td><td>Python developers</td></tr>
+      <tr><td>Docker Hub</td><td>Container images</td><td>DevOps engineers</td></tr>
+      <tr><td>Tool Registry</td><td>AI tools (MCP servers)</td><td>AI agents and developers</td></tr>
+    </tbody>
+  </table>
+
+  <p>The Tool Registry was created to solve a specific problem: AI agents had no reliable, standardised way to discover what tools were available to them. Without a registry, an agent must be manually configured to know about each tool individually. This does not scale. As the number of AI tools grows into the thousands, a searchable directory becomes essential.</p>
+
+  <h3>What a Registry Entry Contains</h3>
+  <p>Every entry in the Tool Registry represents one AI tool. The following shows the structure of a registry record, based on the real model in the codebase:</p>
+  <pre><code>// tool-registry/pkg/model/types.go
+type Tool struct {
+    ID          string      // Unique identifier, e.g. "file-reader"
+    Name        string      // Human-readable name
+    Description string      // What this tool does
+    Publisher   Publisher   // Who created and is responsible for it
+    Repository  *Repository // Where the source code lives
+    Packages    []Package   // How to install it (npm, pip, docker, etc.)
+    Version     string      // Current version
+    CreatedAt   time.Time   // When it was first published
+    UpdatedAt   time.Time   // When it was last updated
+}</code></pre>
+  <p>Each field answers a question a developer or AI agent would ask:</p>
+  <ul>
+    <li><strong>ID:</strong> What is the unique identifier I can reference this tool by?</li>
+    <li><strong>Description:</strong> What does this tool actually do?</li>
+    <li><strong>Publisher:</strong> Who is responsible for it, and can I trust them?</li>
+    <li><strong>Packages:</strong> How do I install and run it?</li>
+    <li><strong>Version:</strong> Which version am I getting?</li>
+  </ul>
+  <p>The registry exists to create, store, and serve these records reliably.</p>
+
+  <h2>System Diagram</h2>
+  <pre class="diagram">THE TOOL REGISTRY: A Catalogue for AI Tools
+
+Developer submits a tool:       AI Agent discovers tools:
+  tool_manifest.json              GET /tools
+         │                               │
+         ▼                               ▼
+┌─────────────────────────────────────────────────┐
+│               TOOL REGISTRY                     │
+│  ┌───────────────────────────────────────────┐  │
+│  │  tools table (database)                   │  │
+│  │  ┌─────────────┬────────────┬──────────┐  │  │
+│  │  │ id          │ name       │ version  │  │  │
+│  │  ├─────────────┼────────────┼──────────┤  │  │
+│  │  │ file-reader │ File Reader│  1.2.0   │  │  │
+│  │  │ web-search  │ Web Search │  2.0.1   │  │  │
+│  │  │ calculator  │ Calculator │  1.3.0   │  │  │
+│  │  └─────────────┴────────────┴──────────┘  │  │
+│  └───────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────┘
+         │                               │
+         ▼                               ▼
+  POST /tools/publish             {"tools": [...],
+  (requires auth token)            "total": 3}</pre>
+
+  <h2>The Real Code</h2>
+  <p>The following shows how the Tool Registry handles a request to list all tools. Notice the three-step pattern: read the request, query the database, return the result.</p>
+  <pre><code>// tool-registry/internal/api/handlers/tools.go
+func ListTools(c *gin.Context) {
+    // Step 1: Read the query parameters (search terms, pagination)
+    //         Example: ?search=file&amp;limit=10&amp;offset=0
+    query := parseListQuery(c)
+
+    // Step 2: Ask the database for matching records
+    tools, total, err := service.ListTools(query)
+    if err != nil {
+        c.JSON(500, ErrorResponse{Error: "database error"})
+        return
+    }
+
+    // Step 3: Return the results as JSON
+    c.JSON(200, ListToolsResponse{
+        Tools: tools,
+        Total: total,
+    })
+}</code></pre>
+  <p>This three-step pattern, receive, retrieve, respond, appears in nearly every API handler ever written. Once you recognise it, you will find it in every backend system you study.</p>
+
+  <div class="lab">
+    <div class="lab-header">🔬 Lab Activity: Build Your Own Registry</div>
+    <div class="lab-meta">Time: ~25 minutes &nbsp;|&nbsp; You will need: Python 3.10+ &nbsp;|&nbsp; Windows PowerShell</div>
+
+    <p><strong>What you will build:</strong> A fully functional local Tool Registry backed by SQLite. You will add tool entries, list them, search them by keyword, and run a small query client against the registry. Everything runs on your own computer.</p>
+
+    <p><span class="step">1</span> <strong>Create the project folder.</strong></p>
+    <pre><code>mkdir C:\labs\ch05-registry
+cd C:\labs\ch05-registry</code></pre>
+
+    <p><span class="step">2</span> <strong>Create the registry database: <code>setup_registry.py</code>.</strong></p>
+    <pre><code>notepad setup_registry.py</code></pre>
+    <pre><code>"""
+setup_registry.py
+Creates the Tool Registry database and populates it with sample entries.
+This is equivalent to the database migration that creates the 'tools' table
+in a production registry.
+"""
+import sqlite3
+from datetime import datetime
+
+DB = "tool_registry.db"
+
+def setup():
+    conn = sqlite3.connect(DB)
+
+    # Create the tools table
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS tools (
+            id          TEXT PRIMARY KEY,
+            name        TEXT NOT NULL,
+            description TEXT NOT NULL,
+            version     TEXT NOT NULL,
+            publisher   TEXT NOT NULL,
+            category    TEXT,
+            created_at  TEXT DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
+    # Create an index so searches run fast
+    conn.execute("""
+        CREATE INDEX IF NOT EXISTS idx_tools_category
+        ON tools(category)
+    """)
+
+    conn.commit()
+    print("Database created: tool_registry.db")
+    print("Table 'tools' is ready.\n")
+    return conn
+
+def add_tool(conn, id, name, description, version, publisher, category):
+    conn.execute(
+        "INSERT OR REPLACE INTO tools VALUES (?, ?, ?, ?, ?, ?, ?)",
+        (id, name, description, version, publisher, category,
+         datetime.now().isoformat())
+    )
+    conn.commit()
+    print(f"  Added: '{name}' ({id})")
+
+# Create the database
+conn = setup()
+
+# Add sample tools
+print("Adding sample tools:")
+add_tool(conn,
+    id="file-reader",
+    name="File Reader",
+    description="Reads files from the local filesystem and returns their content.",
+    version="1.2.0",
+    publisher="tools-team",
+    category="files"
+)
+add_tool(conn,
+    id="web-search",
+    name="Web Search",
+    description="Searches the internet and returns a list of relevant results.",
+    version="2.0.1",
+    publisher="search-team",
+    category="internet"
+)
+add_tool(conn,
+    id="calculator",
+    name="Calculator",
+    description="Evaluates mathematical expressions and returns the result.",
+    version="1.3.0",
+    publisher="math-team",
+    category="utilities"
+)
+add_tool(conn,
+    id="calendar",
+    name="Calendar",
+    description="Reads and writes calendar events for scheduling and reminders.",
+    version="0.9.0",
+    publisher="productivity-team",
+    category="productivity"
+)
+add_tool(conn,
+    id="note-taker",
+    name="Note Taker",
+    description="Creates, reads, and organises personal notes and reminders.",
+    version="1.0.0",
+    publisher="productivity-team",
+    category="productivity"
+)
+
+print(f"\nRegistry ready. Run query_registry.py to explore it.")
+conn.close()</code></pre>
+
+    <p><span class="step">3</span> <strong>Run the setup script.</strong></p>
+    <pre><code>python setup_registry.py</code></pre>
+    <p class="success">✅ You should see:</p>
+    <pre><code>Database created: tool_registry.db
+Table 'tools' is ready.
+
+Adding sample tools:
+  Added: 'File Reader' (file-reader)
+  Added: 'Web Search' (web-search)
+  Added: 'Calculator' (calculator)
+  Added: 'Calendar' (calendar)
+  Added: 'Note Taker' (note-taker)
+
+Registry ready. Run query_registry.py to explore it.</code></pre>
+
+    <p><span class="step">4</span> <strong>Create the query client: <code>query_registry.py</code>.</strong></p>
+    <pre><code>notepad query_registry.py</code></pre>
+    <pre><code>"""
+query_registry.py
+Demonstrates the three core operations every registry must support:
+  1. List all entries
+  2. Get one entry by ID
+  3. Search entries by keyword
+"""
+import sqlite3
+import json
+
+DB = "tool_registry.db"
+
+def list_tools(conn, limit=10):
+    """Return all tools, sorted by name."""
+    rows = conn.execute(
+        "SELECT id, name, description, version, publisher, category "
+        "FROM tools ORDER BY name LIMIT ?",
+        (limit,)
+    ).fetchall()
+    return [
+        {"id": r[0], "name": r[1], "description": r[2],
+         "version": r[3], "publisher": r[4], "category": r[5]}
+        for r in rows
+    ]
+
+def get_tool(conn, tool_id):
+    """Return one specific tool by its ID."""
+    row = conn.execute(
+        "SELECT id, name, description, version, publisher, category "
+        "FROM tools WHERE id = ?",
+        (tool_id,)
+    ).fetchone()
+    if row:
+        return {"id": row[0], "name": row[1], "description": row[2],
+                "version": row[3], "publisher": row[4], "category": row[5]}
+    return None
+
+def search_tools(conn, keyword):
+    """Return tools whose name, description, or category matches the keyword."""
+    rows = conn.execute(
+        "SELECT id, name, description, version FROM tools "
+        "WHERE name LIKE ? OR description LIKE ? OR category LIKE ?",
+        (f"%{keyword}%", f"%{keyword}%", f"%{keyword}%")
+    ).fetchall()
+    return [{"id": r[0], "name": r[1], "description": r[2], "version": r[3]}
+            for r in rows]
+
+def count_tools(conn):
+    return conn.execute("SELECT COUNT(*) FROM tools").fetchone()[0]
+
+
+# Open the database
+conn = sqlite3.connect(DB)
+
+print("=" * 58)
+print("Tool Registry: Query Demo")
+print("=" * 58)
+
+# Operation 1: List all tools
+print(f"\n--- List all tools ({count_tools(conn)} registered) ---\n")
+tools = list_tools(conn)
+print(f"{'ID':&lt;16} {'Name':&lt;16} {'Version':&lt;10} {'Category'}")
+print("-" * 58)
+for t in tools:
+    print(f"{t['id']:&lt;16} {t['name']:&lt;16} {t['version']:&lt;10} {t['category']}")
+
+# Operation 2: Get one tool by ID
+print("\n--- Get details for 'web-search' ---\n")
+tool = get_tool(conn, "web-search")
+if tool:
+    print(json.dumps(tool, indent=2))
+else:
+    print("Not found.")
+
+# Operation 3: Search by keyword
+print("\n--- Search for 'productivity' ---\n")
+results = search_tools(conn, "productivity")
+print(f"Found {len(results)} result(s):")
+for r in results:
+    print(f"  {r['id']:&lt;16}  {r['name']}  (v{r['version']})")
+
+# Operation 4: Search for something that does not exist
+print("\n--- Search for 'voice-control' ---\n")
+results = search_tools(conn, "voice-control")
+print(f"Found {len(results)} result(s). (Not yet registered.)")
+
+conn.close()
+
+print("\n" + "=" * 58)
+print("These three operations (list, get, search) are the")
+print("foundation of every registry ever built.")
+print("=" * 58)</code></pre>
+
+    <p><span class="step">5</span> <strong>Run the query client.</strong></p>
+    <pre><code>python query_registry.py</code></pre>
+    <p class="success">✅ You should see:</p>
+    <pre><code>==========================================================
+Tool Registry: Query Demo
+==========================================================
+
+--- List all tools (5 registered) ---
+
+ID               Name             Version    Category
+----------------------------------------------------------
+calculator       Calculator       1.3.0      utilities
+calendar         Calendar         0.9.0      productivity
+file-reader      File Reader      1.2.0      files
+note-taker       Note Taker       1.0.0      productivity
+web-search       Web Search       2.0.1      internet
+
+--- Get details for 'web-search' ---
+
+{
+  "id": "web-search",
+  "name": "Web Search",
+  "description": "Searches the internet and returns relevant results.",
+  "version": "2.0.1",
+  "publisher": "search-team",
+  "category": "internet"
+}
+
+--- Search for 'productivity' ---
+
+Found 2 result(s):
+  calendar         Calendar  (v0.9.0)
+  note-taker       Note Taker  (v1.0.0)
+
+--- Search for 'voice-control' ---
+
+Found 0 result(s). (Not yet registered.)</code></pre>
+
+    <p><span class="step">6</span> <strong>Add your own tool entry.</strong></p>
+    <p>Open <code>setup_registry.py</code> and add a sixth tool using the same <code>add_tool</code> pattern. Choose a tool idea of your own, give it a unique ID, and run the script again. Then re-run <code>query_registry.py</code> to confirm your tool appears.</p>
+
+    <p><strong>What you just built:</strong> A working registry with a real SQLite database. You created the schema, populated it with data, and queried it using list, get, and search operations. This is the same structure that powers every package registry in the software industry, from npm to PyPI, applied to AI tools.</p>
+  </div>
+
+  <div class="real-world">
+    <div class="real-world-header">🌍 Real World</div>
+    <p>npm, the Node Package Manager registry, hosts over two million JavaScript packages and processes more than three billion downloads per day. When a developer runs <code>npm install express</code>, npm's registry receives a query, finds the package entry, and returns the download location. The entire operation follows the same three-step pattern you just built: receive the request, query the database, return the result. The Tool Registry follows the same model, with AI agents substituted for human developers as the primary consumers of the catalogue.</p>
+  </div>
+
+  <div class="takeaway">
+    <h2>The Takeaway</h2>
+    <p>A registry is an organised, searchable catalogue. Its three core operations are universal: list everything, retrieve one specific item, and search by keyword. The Tool Registry applies this pattern to AI tools, giving agents a reliable way to discover what capabilities are available to them.</p>
+  </div>
+
+  <h2>The Connection</h2>
+  <p>The registry stores data. But where does that data actually live, and how is it structured? In Chapter 6, we examine the database, the filing cabinet beneath every registry, exploring how it is designed, how its structure can be changed safely over time, and why those design decisions matter.</p>
+
+  <div class="chapter-nav">
+    <a href="#ch04">&larr; Chapter 4</a>
+    <span>End of Chapters 1-5: continue to Chapter 6</span>
+  </div>
+</section>
+
+</main>
+</body>
+</html>
